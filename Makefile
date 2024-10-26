@@ -13,7 +13,7 @@ tidy:
 
 # Build the Go application
 build:
-	go build -o $(BUILD_DIR)/$(BINARY_NAME) main.go
+	go build -o $(BUILD_DIR)/$(BINARY_NAME) .
 
 # Run tests
 test:
