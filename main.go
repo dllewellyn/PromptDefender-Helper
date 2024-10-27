@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/invopop/jsonschema"
 	"google.golang.org/api/option"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -18,6 +17,8 @@ import (
 
 func main() {
 	r := gin.Default()
+	r.Static("/static", "./static")
+	r.LoadHTMLGlob("templates/*.html")
 
 	ctx := context.Background()
 
@@ -25,7 +26,56 @@ func main() {
 
 	reflector, model := createReflectorAndModel()
 
-	prompt, err := dotprompt.Open("extract_data")
+	err, scoreLlmPrompt := retrievePrompt(model, reflector)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	flow := genkit.DefineFlow("scorePromptSecurity", func(ctx context.Context, input string) (string, error) {
+		response, err := scoreLlmPrompt.Generate(ctx, &dotprompt.PromptRequest{
+			Variables: score.LlmScoringPromptInput{
+				input,
+			},
+		}, nil)
+
+		if err != nil {
+			return "", err
+		}
+
+		return response.Text(), nil
+	})
+
+	// Define a route and handler
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "template.html", "gopher")
+	})
+
+	r.POST("/score", func(c *gin.Context) {
+		// Get the prompt from the text body
+		prompt := c.PostForm("prompt")
+
+		scorer := score.NewLlmScorer(func(prompt string) (string, error) {
+
+			return flow.Run(ctx, prompt)
+		})
+
+		response, err := scorer.Score(prompt)
+
+		if err != nil {
+			// Send an error response
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+
+		c.HTML(http.StatusOK, "score.html", *response)
+	})
+
+	// Start the server
+	r.Run(":8080")
+}
+
+func retrievePrompt(model ai.Model, reflector *jsonschema.Reflector) (error, *dotprompt.Prompt) {
+	prompt, err := dotprompt.Open("scoring_prompt")
 
 	if err != nil {
 		log.Fatal(err)
@@ -38,57 +88,7 @@ func main() {
 			OutputFormat: ai.OutputFormatText,
 		},
 	)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Load HTML template from file
-	tmpl, err := template.ParseFiles("templates/template.html")
-	if err != nil {
-		panic(err)
-	}
-	r.SetHTMLTemplate(tmpl)
-
-	// Define a route and handler
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "template.html", "gopher")
-	})
-
-	r.POST("/score", func(c *gin.Context) {
-		// Get the prompt from the text body
-		prompt := c.PostForm("prompt")
-
-		scorer := score.NewLlmScorer(func(prompt string) (string, error) {
-			flow := genkit.DefineFlow("scorePromptSecurity", func(ctx context.Context, input string) (string, error) {
-				response, err := scoreLlmPrompt.Generate(ctx, &dotprompt.PromptRequest{
-					Variables: score.LlmScoringPromptInput{
-						input,
-					},
-				}, nil)
-
-				if err != nil {
-					return "", err
-				}
-
-				return response.Text(), nil
-			})
-
-			return flow.Run(ctx, prompt)
-		})
-
-		response, err := scorer.Score(prompt)
-
-		if err != nil {
-			// Send an error response
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-
-		c.HTML(http.StatusOK, "score.html", response)
-	})
-
-	// Start the server
-	r.Run(":8080")
+	return err, scoreLlmPrompt
 }
 
 func initialiseGenkit(ctx context.Context) {

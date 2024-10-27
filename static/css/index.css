@@ -1,0 +1,103 @@
+/* Import Google Font Lato */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+/* General Typography */
+body,
+h4, h5, h6,
+p,
+a,
+button,
+.navbar-brand,
+.nav-link {
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    color: black;
+}
+
+h1, h2, h3 {
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    font-weight: 700; /* Bold for headings */
+    color: #000000; /* Pure Black */
+    text-transform: uppercase;
+}
+
+.caps {
+    font-size: 1.25rem;
+    font-weight: 700; /* Bold */
+    text-transform: uppercase;
+    color: #000000; /* Pure Black */
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+}
+
+i {
+    color: #333333; /* Dark Grey */
+}
+
+.background-gradient {
+    background: linear-gradient(to bottom, #333333, #4d4d4d, #666666); /* Monochromatic gradient */
+}
+
+main {
+    /* Using a light grey background */
+    background-color: #D9D9D9;
+    color: #333333; /* Dark Grey */
+}
+
+.btn-primary {
+    background-color: #000000 !important; /* Pure Black */
+    border-color: #000000 !important; /* Pure Black */
+    color: #FFFFFF !important; /* White */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transition: transform 0.2s, background 0.2s; /* Hover animation */
+    text-transform: uppercase;
+    font-weight: 700; /* Bold */
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    border-color: #333333 !important; /* Dark Grey */
+    background: linear-gradient(45deg, #333333, #4d4d4d); /* Dark Grey gradient */
+    transform: scale(1.1);
+}
+
+section {
+    padding: 20px 0;
+    align-content: center;
+    background-color: #FFFFFF; /* White */
+}
+
+.highlight {
+    font-weight: 700; /* Bold */
+    color: #000000; /* Pure Black */
+}
+
+.lead-text {
+    font-size: 3rem;
+    font-weight: 700; /* Bold */
+    color: #000000; /* Pure Black */
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 66.67%; /* 2/3rd of the screen */
+    }
+}
+
+/* Defenses Grid */
+.defenses-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1em;
+}
+
+@media (min-width: 768px) {
+    .defenses-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

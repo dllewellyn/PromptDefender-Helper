@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello, World!</title>
+    <title>Submit Prompt</title>
+    <link rel="stylesheet" href="/static/css/index.css">
 </head>
 <body>
-    <h1>Hello and welcome, {{.}}</h1>
+    <h1>Submit your prompt</h1>
+    <form action="/score" method="post">
+        <label for="prompt">Prompt:</label>
+        <textarea id="prompt" name="prompt" rows="4" cols="50"></textarea>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>

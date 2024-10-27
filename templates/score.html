@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prompt Score</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/card.css">
+</head>
+<body>
+<h1>Prompt Score</h1>
+
+<div class="container">
+    <div class="card-dark"><p><strong>Score:</strong> {{.Score}}</p></div>
+
+    <div class="card-light"><p>{{.Explanation}}</p></div>
+
+    <h2>Defenses</h2>
+    <div class="defenses-grid">
+        <div class="{{if .Defenses.InContextDefense}}card-success{{else}}card-danger{{end}}">
+            <strong>In Context Defense:</strong> {{.Defenses.InContextDefense}}
+        </div>
+        <div class="{{if .Defenses.SystemModeSelfReminder}}card-success{{else}}card-danger{{end}}">
+            <strong>System Mode Self Reminder:</strong> {{.Defenses.SystemModeSelfReminder}}
+        </div>
+        <div class="{{if .Defenses.SandwichDefense}}card-success{{else}}card-danger{{end}}">
+            <strong>Sandwich Defense:</strong> {{.Defenses.SandwichDefense}}
+        </div>
+        <div class="{{if .Defenses.XMLEncapsulation}}card-success{{else}}card-danger{{end}}">
+            <strong>XML Encapsulation:</strong> {{.Defenses.XMLEncapsulation}}
+        </div>
+        <div class="{{if .Defenses.RandomSequenceEnclosure}}card-success{{else}}card-danger{{end}}">
+            <strong>Random Sequence Enclosure:</strong> {{.Defenses.RandomSequenceEnclosure}}
+        </div>
+    </div>
+</div>
+</body>
+</html>
