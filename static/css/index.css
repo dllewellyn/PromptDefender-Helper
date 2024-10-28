@@ -50,6 +50,7 @@ main {
     transition: transform 0.2s, background 0.2s; /* Hover animation */
     text-transform: uppercase;
     font-weight: 700; /* Bold */
+    padding: 1em;
 }
 
 .btn-primary:hover,
