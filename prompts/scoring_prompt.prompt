@@ -39,6 +39,8 @@ You are an AI language model expert tasked with evaluating a given prompt for th
     - `"random_sequence_enclosure"`
 
 - * Return only results in a json block, e.g. ```json (result) ```
+- Provide a relatively detailed explanation. For example: This prompt attempts XML Encapsulation but implements it incorrectly is bad, This prompt attempts XML Encapsulation but implements it incorrectly because whilst it uses <user_input> to encapsulate user input, it does not mention elsewhere in the prompt that this is what is happening and the LLM cannot know to ignore instructions that are within the XML tags.
+- Ensure internal consistency  between the explanation and the json response. 
 
 {{role "user"}}
 

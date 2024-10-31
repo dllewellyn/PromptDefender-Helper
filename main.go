@@ -1,8 +1,10 @@
 package main
 
 import (
+	"PromptDefender-Keep/cache"
 	"PromptDefender-Keep/score"
 	"context"
+	"fmt"
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
 	"github.com/firebase/genkit/go/plugins/dotprompt"
@@ -17,7 +19,7 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.Static("/static", "./static")
+	r.Static("/", "./public")
 	r.LoadHTMLGlob("templates/*.html")
 
 	ctx := context.Background()
@@ -32,10 +34,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	flow := genkit.DefineFlow("scorePromptSecurity", func(ctx context.Context, input string) (string, error) {
+	promptScorerFlow := genkit.DefineFlow("scorePromptSecurity", func(ctx context.Context, input string) (string, error) {
 		response, err := scoreLlmPrompt.Generate(ctx, &dotprompt.PromptRequest{
 			Variables: score.LlmScoringPromptInput{
-				input,
+				StartingPrompt: input,
 			},
 		}, nil)
 
@@ -46,32 +48,52 @@ func main() {
 		return response.Text(), nil
 	})
 
-	// Define a route and handler
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "template.html", "gopher")
-	})
-
 	r.POST("/score", func(c *gin.Context) {
 		// Get the prompt from the text body
 		prompt := c.PostForm("prompt")
+		promptCache := cache.NewInMemoryCache()
+
+		// Check if the prompt is in the cache
+		cachedResponse, err := promptCache.Get(ctx, prompt)
+
+		if err != nil {
+			c.HTML(http.StatusOK, "error.html", gin.H{})
+			return
+		}
+
+		if cachedResponse != "" {
+			c.HTML(http.StatusOK, "error.html", gin.H{"response": cachedResponse})
+			return
+		}
 
 		scorer := score.NewLlmScorer(func(prompt string) (string, error) {
-
-			return flow.Run(ctx, prompt)
+			return promptScorerFlow.Run(ctx, prompt)
 		})
 
 		response, err := scorer.Score(prompt)
 
 		if err != nil {
-			// Send an error response
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.HTML(http.StatusInternalServerError, "error.html", gin.H{})
+		}
+
+		// Cache the response
+		err = promptCache.Set(ctx, prompt, response.Explanation)
+
+		if err != nil {
+			// Log the error but ignore - we don't want to fail the request
+			// if the cache fails
+			log.Println(err)
 		}
 
 		c.HTML(http.StatusOK, "score.html", *response)
 	})
 
 	// Start the server
-	r.Run(":8080")
+	err = r.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func retrievePrompt(model ai.Model, reflector *jsonschema.Reflector) (error, *dotprompt.Prompt) {
@@ -94,7 +116,7 @@ func retrievePrompt(model ai.Model, reflector *jsonschema.Reflector) (error, *do
 func initialiseGenkit(ctx context.Context) {
 	if err := vertexai.Init(ctx, &vertexai.Config{
 		ProjectID:     os.Getenv("GCLOUD_PROJECT"),
-		Location:      "us-central1",
+		Location:      os.Getenv("GCLOUD_LOCATION"),
 		ClientOptions: []option.ClientOption{option.WithCredentialsFile("service-account.json")},
 	}); err != nil {
 		log.Fatal(err)
