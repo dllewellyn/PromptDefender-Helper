@@ -35,7 +35,7 @@ func main() {
 	flow := genkit.DefineFlow("scorePromptSecurity", func(ctx context.Context, input string) (string, error) {
 		response, err := scoreLlmPrompt.Generate(ctx, &dotprompt.PromptRequest{
 			Variables: score.LlmScoringPromptInput{
-				input,
+				StartingPrompt: input,
 			},
 		}, nil)
 
@@ -71,7 +71,7 @@ func main() {
 	})
 
 	// Start the server
-	r.Run(":8080")
+	r.Run(":" + os.Getenv("PORT"))
 }
 
 func retrievePrompt(model ai.Model, reflector *jsonschema.Reflector) (error, *dotprompt.Prompt) {
