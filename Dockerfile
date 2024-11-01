@@ -1,14 +1,12 @@
-FROM klakegg/hugo:ext-alpine as hugo-builder
+FROM klakegg/hugo:latest as hugo-builder
 
 COPY . /src
 WORKDIR /src
 
-RUN make build
+RUN cd ui && hugo && mv public ../public
 
-# Stage 2: Build the Go binary
 FROM golang:1.23-alpine as go-builder
 
-# Copy the Go source files
 COPY . /src
 WORKDIR /src
 
