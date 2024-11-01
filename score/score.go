@@ -2,7 +2,6 @@ package score
 
 import (
 	"encoding/json"
-	"os"
 	"strings"
 )
 
@@ -22,21 +21,13 @@ type PromptScore struct {
 
 // Function to parse the JSON string into the struct
 func parseJSON(input string) (PromptScore, error) {
-
-	// Write the string to file
-	err := os.WriteFile("response.json", []byte(input), 0644)
-
-	if err != nil {
-		return PromptScore{}, err
-	}
-
 	cleaned := strings.TrimPrefix(input, "```json")
 	cleaned = strings.ReplaceAll(cleaned, "\n", "")
 	cleaned = strings.TrimSuffix(cleaned, "```")
 
 	// Unmarshal the JSON into the struct
 	var result PromptScore
-	err = json.Unmarshal([]byte(cleaned), &result)
+	err := json.Unmarshal([]byte(cleaned), &result)
 	return result, err
 }
 
