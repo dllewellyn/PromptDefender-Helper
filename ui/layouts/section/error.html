@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html>
-{{ template "header.html" . }}
+{{ partial "header.html" . }}
 
-<body class="container">
-<div class="form-container">
-    Something went wrong. Please try again.
+<body class="cards-container">
+<div class="cards-container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <div class="error-icon">
+                        <i class="fas fa-robot fa-5x text-danger"></i>
+                    </div>
+                    <h2 class="card-title">Oops! Something Went Wrong</h2>
+                    <p class="card-text">I think I'm going to have to get the humans involved - want to send them a
+                        message?</p>
+
+                    <div class="form-group mt-4">
+                        <label for="errorMessage">Error Message:</label>
+                        <div class="input-group">
+                            <textarea class="form-control" id="errorMessage" rows="3" readonly></textarea>
+                            <div class="input-group-append">
+                  <span class="input-group-text" id="copyError">
+                    <i class="fas fa-copy"></i>
+                  </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <a href="/" class="btn btn-primary mr-2">Go Back Home</a>
+                    <a href="#" id="contactHumans" class="btn btn-outline-danger">Contact Humans</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

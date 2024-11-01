@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta name="generator" content="Hugo 0.127.0">
+    <link rel="stylesheet" href="/css/app.css">
+<style>
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+
+<script src="https://unpkg.com/@hotwired/stimulus/dist/stimulus.umd.js"></script>
+
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/card.css">
+<link rel="stylesheet" href="/css/score.css">
+<script src="/js/tour.js"></script>
+<script src="/js/gauge-colour.js"></script>
+<script async src="/js/index-controller.js"></script>
+    <title>Prompt Defender - Keep</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/css/shepherd.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/js/shepherd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.12/dist/turbo.es2017-umd.min.js" defer></script>
+
+</head>
+<body>
+<turbo-frame id="container" data-turbo-action="advance">
+    <div class="main-container" data-controller="code-editor">
+        <form id="promptForm" method="post" data-code-editor-target="form" data-turbo-frame="container">
+            <div id="editor-container" class="editor-container">
+                <div class="prompt-instruction">Enter your prompt into the editor below:</div>
+                <label for="code-editor">
+                    Place your prompt here
+                </label><textarea id="code-editor" data-code-editor-target="editor" name="prompt"></textarea>
+            </div>
+
+            <div class="actions-container">
+                <h1>Prompt Defender - Keep</h1>
+                <button class="btn-primary" type="button" id="tour" data-code-editor-target="tour"
+                        data-action="click->code-editor#takeTour">Take a tour
+                </button>
+                <button class="btn-primary" type="button" id="example" data-code-editor-target="example"
+                        data-action="click->code-editor#loadExample">Try with an example
+                </button>
+                <button class="btn-primary" type="submit" id="score" data-code-editor-target="score"
+                        data-action="click->code-editor#setFormAction" data-action-value="/score">Score your prompt
+                </button>
+                <button class="btn-primary" type="submit" id="improve" data-code-editor-target="improve"
+                        data-action="click->code-editor#setFormAction" data-action-value="/improve">Suggest improvements
+                </button>
+            </div>
+            <input type="hidden" name="prompt" data-code-editor-target="prompt"/>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            runTour();
+        });
+    </script>
+</turbo-frame>
+</body>
+
+</html>

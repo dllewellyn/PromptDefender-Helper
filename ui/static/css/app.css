@@ -78,14 +78,14 @@ section {
     color: #000000; /* Pure Black */
 }
 
-.container {
+.cards-container {
     max-width: 100%;
     margin: 0 auto;
     padding: 0 20px;
 }
 
 @media (min-width: 1024px) {
-    .container {
+    .cards-container {
         max-width: 66.67%; /* 2/3rd of the screen */
     }
 }

@@ -1,36 +1,46 @@
 <turbo-frame id="container">
-    <div class="container">
-        <div class="card-dark"><p><strong>Score:</strong> {{.Score}}/10</p></div>
+    <div class="score-container">
+        <div class="cards-container">
+            <div class="score-gauge-container">
+                <h2>Score</h2>
+                <div class="score-gauge">
+                    <div class="score-gauge-number">{{.Score}}</div>
+                </div>
+            </div>
+            <div class="explanation-card">
+                <h3>Explanation</h3>
+                <p>{{.Explanation}}</p>
+            </div>
+            <div class="phrases-list">
+                {{ range .Defences }}
+                {{ if .IsPresent }}
+                <div class="defence-is-present">
+                    {{ else }}
+                    <div class="defence-is-not-present">
+                        {{ end }}
+                        <div class="score-card-title">{{ .Name }}</div>
+                        <div class="score-card-subtitle">{{ .Description }}</div>
+                    </div>
+                    {{ end }}
+                    <div class="action-card">
+                        <form action="/improve" method="post">
+                            <input type="hidden" name="prompt" value="{{ .Prompt }}"/>
+                            <p  class="score-card-title" style="color: white">Automatically improve prompt</p>
+                            <button type="submit" class="btn btn-primary">Improve now</button>
+                        </form>
+                    </div>
+                </div>
 
-        <div class="card-light"><p>{{.Explanation}}</p></div>
-
-        <h2>Defenses</h2>
-        <div class="defenses-grid">
-            <div class="{{if .Defenses.InContextDefense}}card-success{{else}}card-danger{{end}}">
-                <strong>In Context Defense:</strong> {{.Defenses.InContextDefense}}
-                <p class="defense-description">Provides important context to prevent misinterpretation. Learn how to
-                    enable it <a href="#">here</a>.</p>
-            </div>
-            <div class="{{if .Defenses.SystemModeSelfReminder}}card-success{{else}}card-danger{{end}}">
-                <strong>System Mode Self Reminder:</strong> {{.Defenses.SystemModeSelfReminder}}
-                <p class="defense-description">Reminds the system to maintain its intended mode. Find steps to activate
-                    it <a href="#">here</a>.</p>
-            </div>
-            <div class="{{if .Defenses.SandwichDefense}}card-success{{else}}card-danger{{end}}">
-                <strong>Sandwich Defense:</strong> {{.Defenses.SandwichDefense}}
-                <p class="defense-description">Encapsulates risky prompts with a protective layer. Learn more about
-                    implementing it <a href="#">here</a>.</p>
-            </div>
-            <div class="{{if .Defenses.XMLEncapsulation}}card-success{{else}}card-danger{{end}}">
-                <strong>XML Encapsulation:</strong> {{.Defenses.XMLEncapsulation}}
-                <p class="defense-description">Helps to ensure safe encapsulation of structured data. Learn more <a
-                        href="#">here</a>.</p>
-            </div>
-            <div class="{{if .Defenses.RandomSequenceEnclosure}}card-success{{else}}card-danger{{end}}">
-                <strong>Random Sequence Enclosure:</strong> {{.Defenses.RandomSequenceEnclosure}}
-                <p class="defense-description">Adds randomness to prevent prompt reuse attacks. Steps to activate <a
-                        href="#">here</a>.</p>
             </div>
         </div>
     </div>
+    <script>
+        var score = {{ .Score }};
+        var scoreGauge = document.querySelector('.score-gauge');
+        var scoreNumber = document.querySelector('.score-gauge-number');
+
+
+        scoreGauge.style.background = getGaugeColor(score * 10);
+        scoreNumber.textContent = score;
+    </script>
 </turbo-frame>

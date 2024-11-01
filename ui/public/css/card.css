@@ -1,0 +1,59 @@
+.card-dark,
+.card-success,
+.card-danger,
+.card-light {
+    padding: 1em;
+    margin: 1em;
+    border-radius: 5px;
+}
+
+.card-light {
+    border-color: #333333;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.card-dark {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.card-dark h1,
+.card-dark h2,
+.card-dark p,
+.card-dark li,
+.card-dark ul,
+.card-dark ol {
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    color: #ffffff;
+}
+
+.card-success {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+.card-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.card-danger h1,
+.card-danger h2,
+.card-danger p,
+.card-danger li,
+.card-danger ul,
+.card-danger ol {
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    color: #ffffff;
+}
+
+.card-success h1,
+.card-success h2,
+.card-success p,
+.card-success li,
+.card-success ul,
+.card-success ol {
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    color: #ffffff;
+}

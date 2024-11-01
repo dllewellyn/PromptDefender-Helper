@@ -6,7 +6,6 @@ import (
 	"strings"
 )
 
-// Define the struct to match the JSON structure
 type Defenses struct {
 	InContextDefense        bool `json:"in_context_defense"`
 	SystemModeSelfReminder  bool `json:"system_mode_self_reminder"`

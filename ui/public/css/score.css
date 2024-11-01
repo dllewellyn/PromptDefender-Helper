@@ -1,0 +1,119 @@
+
+.score-container {
+    font-family: Arial, sans-serif;
+    background: #f7f7fa;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.score-gauge-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.score-gauge {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.score-gauge-number {
+    font-size: 1.5em;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+.explanation-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.phrases-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.defence-is-not-present,
+.defence-is-present,
+.action-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
+    border-radius: 15px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    background: #f0f0f0;
+}
+
+.action-card {
+    border-left: 10px solid #0c0c0c;
+    background: #333333;
+    color: #fff !important;
+}
+
+.defence-is-present {
+    border-left: 10px solid #3dae55;
+}
+
+.defence-is-not-present {
+    border-left: 10px solid rgba(243, 73, 0, 0.85);
+}
+
+.phrase-item:hover {
+    transform: scale(1.05);
+}
+
+.phrase-item::after {
+    content: '\276F';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+    color: #666;
+}
+
+.score-card-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.score-card-subtitle {
+    font-size: 1em;
+    color: #666;
+}
+
+@media (min-width: 768px) {
+    .phrases-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
