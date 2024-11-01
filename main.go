@@ -15,6 +15,23 @@ import (
 )
 
 func main() {
+	// Check if the file 'service-account.json' exists on disk
+	if _, err := os.Stat("service-account.json"); os.IsNotExist(err) {
+		// Retrieve the service account key from the environment variable
+		serviceAccountKey := os.Getenv("SERVICE_ACCOUNT_KEY")
+		if serviceAccountKey == "" {
+			log.Fatal("SERVICE_ACCOUNT_KEY environment variable not set")
+		}
+
+		// Write the service account key to disk
+		file, err := os.Create("service-account.json")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		_, err = file.WriteString(serviceAccountKey)
+	}
+
 	r := gin.Default()
 	r.Static("/", "./public")
 	r.LoadHTMLGlob("templates/*.html")

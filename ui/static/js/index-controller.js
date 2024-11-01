@@ -17,9 +17,28 @@ application.register("code-editor", class extends Stimulus.Controller {
     }
 
     setFormAction(event) {
-        const action = event.currentTarget.dataset.actionValue;
-        this.formTarget.action = action;
-        this.promptTarget.value = this.editor.getValue();
+        let prompt = this.editor.getValue();
+
+        if (prompt === '') {
+            alert('Please enter a prompt');
+            return;
+        }
+
+        // Do a http post as javascript to the /api/improve endpoint
+        fetch('/api/improve', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({prompt})
+        })
+            .then(response => response.json())
+            .then(data => {
+                this.editor.setValue(data.result);
+            })
+            .catch(error => console.error('Error:', error));
+
+        event.preventDefault()
     }
 
     takeTour() {

@@ -9,17 +9,25 @@ import (
 	"net/http"
 )
 
+// AddImprover adds an improve endpoint to the gin engine
 func AddImprover(ctx context.Context, engine *gin.Engine, improver improve.Improver, promptCache cache.Cache) {
-	engine.POST("/improve", func(c *gin.Context) {
+	engine.POST("/api/improve", func(c *gin.Context) {
 
-		prompt := c.PostForm("prompt")
+		var prompt struct {
+			Prompt string `json:"prompt"`
+		}
 
-		log.Println(prompt)
+		if err := c.BindJSON(&prompt); err != nil {
+			log.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
 
-		cachedResponse, err := promptCache.Get(ctx, prompt)
+		cachedResponse, err := promptCache.Get(ctx, prompt.Prompt)
 
 		if err != nil {
-			c.Redirect(http.StatusInternalServerError, "/error")
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
 		}
 
@@ -28,13 +36,22 @@ func AddImprover(ctx context.Context, engine *gin.Engine, improver improve.Impro
 			return
 		}
 
-		response, err := improver.Improve(prompt)
+		response, err := improver.Improve(prompt.Prompt)
 
 		if err != nil {
 			log.Println(err)
-			c.Redirect(http.StatusInternalServerError, "/error")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			return
 		}
 
-		c.HTML(http.StatusOK, "improve.html", response)
+		err = promptCache.Set(ctx, prompt.Prompt, response)
+
+		if err != nil {
+			log.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"result": response})
 	})
 }
