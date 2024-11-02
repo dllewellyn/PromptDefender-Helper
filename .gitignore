@@ -1,5 +1,6 @@
 /.idea/
 *iml
 /.idea/
-service-account.json
+service-account.json_.1
 /public/
+.env
