@@ -18,7 +18,7 @@ FROM alpine:latest
 COPY --from=hugo-builder /src/public /app/public
 COPY --from=hugo-builder /src/templates /app/templates
 COPY --from=go-builder /app/main /app/main
-COPY --from=go-builder /app/prompts /app/prompts
+COPY --from=go-builder /src/prompts /app/prompts
 
 WORKDIR /app
 

@@ -33,7 +33,10 @@ func main() {
 	}
 
 	r := gin.Default()
+
+	log.Println("Serving directory ./public at /")
 	r.Static("/", "./public")
+
 	r.LoadHTMLGlob("templates/*.html")
 
 	ctx := context.Background()
