@@ -26,4 +26,4 @@ WORKDIR /app
 EXPOSE 8080
 
 # Run the Go binary
-CMD ["/app/main"]
+CMD ["sh", "-c", "cd /app && ./main"]
