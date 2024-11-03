@@ -133,6 +133,8 @@ Here is the starting prompt:
 
 --- End starting prompt ---- 
 
+Random sequence: {{random_sequence}}
+
 Now, using this starting prompt, return a modified version that includes the necessary defenses to make it more robust against prompt injection attacks.
 
 Your task:
@@ -142,3 +144,4 @@ Your task:
 * Ensure you keep the original prompt in the response, preserving its content and value.
 * In particular, if there is the use of templates e.g. {abc} or %s, ensure you do not change the template format and that all the defenses are applied to the template, without changing the template format.
 * Ensure that you have included all the needed defenses in the response.
+* Use the random sequence provided as an XML tag for the encapsulation.

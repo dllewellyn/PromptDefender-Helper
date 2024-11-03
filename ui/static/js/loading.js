@@ -3,6 +3,12 @@ document.addEventListener("turbo:before-fetch-request", () => {
     showLoader();
 });
 
+// Listen for turbo errors
+document.addEventListener("turbo:fetch-request-error", () => {
+    console.log("turbo:fetch-request-error ");
+    window.location.href = "/error";
+});
+
 function showLoader() {
     console.log("showLoader");
     document.getElementById("container").style.display = "none";
