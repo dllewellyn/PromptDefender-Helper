@@ -1,0 +1,27 @@
+### Test JSON request
+POST http://localhost:8080/improve
+Content-Type: application/json
+
+{
+  "prompt": "This is a test prompt"
+}
+
+### Test form request
+POST http://localhost:8080/improve
+Content-Type: application/x-www-form-urlencoded
+
+prompt=This is a test prompt
+
+### Test error handling with invalid JSON
+POST http://localhost:8080/improve
+Content-Type: application/json
+
+{
+  "invalid": "data"
+}
+
+### Test error handling with missing form data
+POST http://localhost:8080/improve
+Content-Type: application/x-www-form-urlencoded
+
+invalid=data
