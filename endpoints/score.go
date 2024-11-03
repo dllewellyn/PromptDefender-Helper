@@ -78,10 +78,11 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 
 		prompt := c.PostForm("prompt")
 
-		cachedResponse, err := promptCache.Get(ctx, prompt)
+		cachedResponse, err := promptCache.Get(ctx, prompt+"_score")
 
 		if err != nil {
-			c.Redirect(http.StatusInternalServerError, "/error")
+			log.Println(err)
+			c.Redirect(http.StatusOK, "/error")
 			return
 		}
 
@@ -90,7 +91,8 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 			var response score.PromptScore
 			err = json.Unmarshal([]byte(cachedResponse), &response)
 			if err != nil {
-				c.Redirect(http.StatusInternalServerError, "/error")
+				log.Println(err)
+				c.Redirect(http.StatusOK, "/error")
 				return
 			}
 
@@ -101,10 +103,11 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 		response, err := scorer.Score(prompt)
 
 		if err != nil {
-			c.Redirect(http.StatusInternalServerError, "/error")
+			log.Println(err)
+			c.Redirect(http.StatusOK, "/error")
 		}
 
-		cacheResponse(response, promptCache, prompt)
+		cacheResponse(response, promptCache, prompt+"_score")
 
 		c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, response))
 	})

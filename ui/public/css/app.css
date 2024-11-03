@@ -42,6 +42,25 @@ main {
     color: #333333; /* Dark Grey */
 }
 
+.btn-secondary {
+    background-color: #FFFFFF !important; /* Dark Grey */
+    border-color: #333333 !important; /* Dark Grey */
+    color: #333333 !important; /* White */
+    transition: transform 0.2s, background 0.2s; /* Hover animation */
+    text-transform: uppercase;
+    font-weight: 700; /* Bold */
+    padding: 1em;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+    border-color: #333333 !important; /* Dark Grey */
+    background: linear-gradient(45deg, #333333, #4d4d4d); /* Dark Grey gradient */
+    transform: scale(1.1);
+    color: #FFFFFF !important;
+}
+
 .btn-primary {
     background-color: #000000 !important; /* Pure Black */
     border-color: #000000 !important; /* Pure Black */

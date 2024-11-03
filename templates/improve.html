@@ -1,34 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    {{ partial "header.html" . }}
-    <title>Prompt Defender - Keep</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/css/shepherd.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/8.0.0/js/shepherd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.12/dist/turbo.es2017-umd.min.js" defer></script>
-
-</head>
-<body>
-
-<div id="loader" class="main-container" style="display: none">
-    <div class="loading-container">
-        <div class="loader"></div>
-    </div>
-</div>
-
-<turbo-frame id="container" data-turbo-action="advance">
+<turbo-frame id="container">
     <div class="main-container" data-controller="code-editor">
         <form id="promptForm" method="post" data-code-editor-target="form" data-turbo-frame="container" action="/score">
             <div id="editor-container" class="editor-container">
                 <div class="prompt-instruction">Enter your prompt into the editor below:</div>
                 <label for="code-editor">
                     Place your prompt here
-                </label><textarea id="code-editor" data-code-editor-target="editor" name="prompt"></textarea>
+                </label>
+                <textarea id="code-editor" data-code-editor-target="editor" name="prompt">
+                    {{ . }}
+                </textarea>
             </div>
 
             <div class="actions-container">
@@ -51,13 +31,4 @@
             <input type="hidden" name="prompt" data-code-editor-target="prompt"/>
         </form>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            runTour();
-        });
-    </script>
 </turbo-frame>
-</body>
-
-</html>

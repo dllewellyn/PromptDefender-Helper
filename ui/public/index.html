@@ -29,9 +29,10 @@
 <script src="/js/gauge-colour.js"></script>
 <script async src="/js/index-controller.js"></script>
 
+<link rel="stylesheet" href="/css/loader.css">
 
-<script src="/js/pace.min.js"></script>
-<link rel="stylesheet" href="/css/corner-indicator.css">
+
+<script src="/js/loading.js"></script>
     <title>Prompt Defender - Keep</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
@@ -42,7 +43,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.12/dist/turbo.es2017-umd.min.js" defer></script>
 
 </head>
-<body onload="pace.start()">
+<body>
+
+<div id="loader" class="main-container" style="display: none">
+    <div class="loading-container">
+        <div class="loader"></div>
+    </div>
+</div>
+
 <turbo-frame id="container" data-turbo-action="advance">
     <div class="main-container" data-controller="code-editor">
         <form id="promptForm" method="post" data-code-editor-target="form" data-turbo-frame="container" action="/score">
@@ -61,11 +69,13 @@
                 <button class="btn-primary" type="button" id="example" data-code-editor-target="example"
                         data-action="click->code-editor#loadExample">Try with an example
                 </button>
-                <button class="btn-primary" type="submit" id="score" data-code-editor-target="score">
+                <button class="btn-primary" type="submit" id="score" data-code-editor-target="score"
+                        data-action="click->code-editor#setFormAction" data-action-value="/score">
                     Score your prompt
                 </button>
                 <button class="btn-primary" type="submit" id="improve" data-code-editor-target="improve"
-                        data-action="click->code-editor#setFormAction" data-action-value="/improve">Suggest improvements
+                        data-action="click->code-editor#setFormAction" data-action-value="/improve">
+                    Suggest improvements
                 </button>
             </div>
             <input type="hidden" name="prompt" data-code-editor-target="prompt"/>

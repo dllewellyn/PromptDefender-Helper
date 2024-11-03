@@ -5,11 +5,22 @@ application.register("code-editor", class extends Stimulus.Controller {
     static targets = ["tour", "example", "score", "improve", "editor", "form", "prompt"];
 
     connect() {
+        var editorTarget = this.editorTarget.value;
         this.editor = CodeMirror.fromTextArea(this.editorTarget, {
             lineNumbers: true,
             lineWrapping: true,
             theme: "default"
         });
+
+        if (editorTarget !== '') {
+            console.log('Setting editor value ' + editorTarget);
+            this.editor.setValue(editorTarget);
+            this.editor.refresh();
+        }
+    }
+
+    refresh() {
+        this.editor.refresh();
     }
 
     loadExample() {
@@ -24,21 +35,10 @@ application.register("code-editor", class extends Stimulus.Controller {
             return;
         }
 
-        // Do a http post as javascript to the /api/improve endpoint
-        fetch('/api/improve', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({prompt})
-        })
-            .then(response => response.json())
-            .then(data => {
-                this.editor.setValue(data.result);
-            })
-            .catch(error => console.error('Error:', error));
+        const action = event.currentTarget.dataset.actionValue;
+        this.formTarget.action = action;
+        this.promptTarget.value = this.editor.getValue();
 
-        event.preventDefault()
     }
 
     takeTour() {

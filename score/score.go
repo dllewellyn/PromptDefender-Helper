@@ -46,7 +46,6 @@ type Scorer interface {
 }
 
 func NewLlmScorer(InvokeRequest InvokeRequest) Scorer {
-
 	return &LlmScorer{
 		InvokeRequest: InvokeRequest,
 	}
