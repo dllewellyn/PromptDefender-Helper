@@ -32,7 +32,7 @@ func AddImprover(ctx context.Context, engine *gin.Engine, improver improve.Impro
 		}
 
 		if cachedResponse != "" {
-			c.HTML(http.StatusOK, "improve.html", cachedResponse)
+			c.JSON(http.StatusOK, gin.H{"result": cachedResponse})
 			return
 		}
 

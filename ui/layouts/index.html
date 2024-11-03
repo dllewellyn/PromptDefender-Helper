@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.12/dist/turbo.es2017-umd.min.js" defer></script>
 
 </head>
-<body>
+<body onload="pace.start()">
 <turbo-frame id="container" data-turbo-action="advance">
     <div class="main-container" data-controller="code-editor">
         <form id="promptForm" method="post" data-code-editor-target="form" data-turbo-frame="container" action="/score">
