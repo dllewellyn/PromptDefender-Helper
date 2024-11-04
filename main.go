@@ -35,7 +35,7 @@ func main() {
 
 	scoreLlmTag := fx.ResultTags(`name:"scoreLlm.prompt"`)
 	improveLlmTag := fx.ResultTags(`name:"llmImprover.prompt"`)
-	validateScoreLlmTag := fx.ResultTags(`name:"validateScore.prompt"`)
+
 	app := fx.New(
 		fx.Provide(
 			dependencies.ProvideModel,
@@ -45,8 +45,6 @@ func main() {
 			fx.Annotate(dependencies.ProvideImprovePrompt, improveLlmTag),
 			dependencies.ProvideImprover,
 			dependencies.ProvideDefences,
-			fx.Annotate(dependencies.ProvideValidateScorePrompt, validateScoreLlmTag),
-			dependencies.ProvideValidator,
 		),
 		fx.Invoke(func(scorer score.Scorer, improver improve.Improver, loadedDefences []dependencies.Defence) {
 			if os.Getenv("TEST_MODE") == "true" {
