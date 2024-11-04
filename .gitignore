@@ -1,6 +1,15 @@
+# Ignore intellij idea files 
 /.idea/
 *iml
-/.idea/
-service-account.json_.1
+
+# Prevent from pushing the service account key to the repository
+service-account.json
+
+# Ignore hugo and go build outputs 
 /public/
+/ui/public/
+/bin/
+
+# Avoid pushing the env file to the repository 
 .env
+
