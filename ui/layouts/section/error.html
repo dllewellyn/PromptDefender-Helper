@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html>
-{{ partial "header.html" . }}
+<html lang="en">
 
-<body class="cards-container">
-<div class="cards-container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body text-center">
-                    <div class="error-icon">
-                        <i class="fas fa-robot fa-5x text-danger"></i>
-                    </div>
-                    <h2 class="card-title">Oops! Something Went Wrong</h2>
-                    <p class="card-text">I think I'm going to have to get the humans involved - want to send them a
-                        message?</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-                    <div class="form-group mt-4">
-                        <label for="errorMessage">Error Message:</label>
-                        <div class="input-group">
-                            <textarea class="form-control" id="errorMessage" rows="3" readonly></textarea>
-                            <div class="input-group-append">
-                  <span class="input-group-text" id="copyError">
-                    <i class="fas fa-copy"></i>
-                  </span>
-                            </div>
-                        </div>
-                    </div>
+    <style>
+        .main-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            width: 100%;
+            max-width: 500px;
+        }
+        .error-icon {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
 
+<body>
+    <div class="main-container">
+        <div class="card shadow">
+            <div class="card-body text-center">
 
-                    <a href="/" class="btn btn-primary mr-2">Go Back Home</a>
-                    <a href="#" id="contactHumans" class="btn btn-outline-danger">Contact Humans</a>
-
+                <h2 class="card-title">Oops! Something Went Wrong</h2>
+                <div class="error-icon">
+                    <i class="fas fa-robot fa-5x text-danger"></i>
                 </div>
+
+                <p class="card-text">I think I'm going to have to get the humans involved...</p>
             </div>
         </div>
     </div>
-</div>
+
 </body>
+
 </html>

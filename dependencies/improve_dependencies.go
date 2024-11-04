@@ -1,4 +1,4 @@
-package main
+package dependencies
 
 import (
 	"PromptDefender-Keep/improve"

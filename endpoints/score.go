@@ -2,12 +2,14 @@ package endpoints
 
 import (
 	"PromptDefender-Keep/cache"
+	"PromptDefender-Keep/dependencies"
 	"PromptDefender-Keep/score"
 	"context"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UiDefence struct {
@@ -24,43 +26,33 @@ type UiDefences struct {
 	Prompt      string
 }
 
-func scorePromptToUiFriendlyResponse(inputPrompt string, scorePrompt *score.PromptScore) UiDefences {
-	inContextDefence := UiDefence{
-		Name:        "In Context Defence",
-		Description: "This defence is used to...",
-		IsPresent:   scorePrompt.Defenses.InContextDefense,
-	}
+func scorePromptToUiFriendlyResponse(inputPrompt string, scorePrompt *score.PromptScore, loadedDefences []dependencies.Defence) UiDefences {
 
-	systemModeSelfReminder := UiDefence{
-		Name:        "System Mode Self Reminder",
-		Description: "This defence is used to...",
-		IsPresent:   scorePrompt.Defenses.SystemModeSelfReminder,
-	}
+	var defences []UiDefence
 
-	sandwichDefence := UiDefence{
-		Name:        "Sandwich Defence",
-		Description: "This defence is used to...",
-		IsPresent:   scorePrompt.Defenses.SandwichDefense,
-	}
+	for _, defence := range loadedDefences {
 
-	xmlEncapsulation := UiDefence{
-		Name:        "XML Encapsulation",
-		Description: "This defence is used to...",
-		IsPresent:   scorePrompt.Defenses.XMLEncapsulation,
-	}
+		isPresent := false
 
-	randomSequenceEnclosure := UiDefence{
-		Name:        "Random Sequence Enclosure",
-		Description: "This defence is used to...",
-		IsPresent:   scorePrompt.Defenses.RandomSequenceEnclosure,
-	}
+		switch defence.Id {
+		case dependencies.InContext:
+			isPresent = scorePrompt.Defenses.InContextDefense
+		case dependencies.SystemModeSelfReminder:
+			isPresent = scorePrompt.Defenses.SystemModeSelfReminder
+		case dependencies.SandwichDefence:
+			isPresent = scorePrompt.Defenses.SandwichDefense
+		case dependencies.XmlEncapsulation:
+			isPresent = scorePrompt.Defenses.XMLEncapsulation
+		case dependencies.RandomSequenceEnclosure:
+			isPresent = scorePrompt.Defenses.RandomSequenceEnclosure
+		}
 
-	defences := []UiDefence{
-		inContextDefence,
-		systemModeSelfReminder,
-		sandwichDefence,
-		xmlEncapsulation,
-		randomSequenceEnclosure,
+		defences = append(defences, UiDefence{
+			Name:        defence.Name,
+			Description: defence.Description,
+			IsPresent:   isPresent,
+			Link:        defence.Link,
+		})
 	}
 
 	uiDefences := UiDefences{
@@ -73,7 +65,7 @@ func scorePromptToUiFriendlyResponse(inputPrompt string, scorePrompt *score.Prom
 	return uiDefences
 }
 
-func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, promptCache cache.Cache) {
+func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, promptCache cache.Cache, loadedDefences []dependencies.Defence) {
 	engine.POST("/score", func(c *gin.Context) {
 
 		prompt := c.PostForm("prompt")
@@ -96,7 +88,7 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 				return
 			}
 
-			c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, &response))
+			c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, &response, loadedDefences))
 			return
 		}
 
@@ -109,7 +101,7 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 
 		cacheResponse(response, promptCache, prompt+"_score")
 
-		c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, response))
+		c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, response, loadedDefences))
 	})
 }
 

@@ -1,17 +1,19 @@
-package main
+package dependencies
 
 import (
 	"context"
+	"log"
+	"os"
+
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/plugins/dotprompt"
+	"github.com/firebase/genkit/go/plugins/googlecloud"
 	"github.com/firebase/genkit/go/plugins/vertexai"
 	"github.com/invopop/jsonschema"
 	"google.golang.org/api/option"
-	"log"
-	"os"
 )
 
-func initialiseGenkit(ctx context.Context) {
+func InitialiseGenkit(ctx context.Context) {
 	if err := vertexai.Init(ctx, &vertexai.Config{
 		ProjectID:     os.Getenv("GCLOUD_PROJECT"),
 		Location:      os.Getenv("GCLOUD_LOCATION"),
@@ -21,6 +23,13 @@ func initialiseGenkit(ctx context.Context) {
 	}
 
 	dotprompt.SetDirectory("prompts")
+
+	if err := googlecloud.Init(
+		ctx,
+		googlecloud.Config{ProjectID: os.Getenv("GCLOUD_PROJECT")},
+	); err != nil {
+		log.Fatal(err)
+	}
 
 }
 

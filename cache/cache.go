@@ -18,7 +18,7 @@ type InMemoryCache struct {
 	mu   sync.RWMutex
 }
 
-func NewInMemoryCache() *InMemoryCache {
+func NewInMemoryCache() Cache {
 	return &InMemoryCache{
 		data: make(map[string]string),
 	}

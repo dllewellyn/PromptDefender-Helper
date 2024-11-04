@@ -30,6 +30,16 @@ document.addEventListener("turbo:load", () => {
     hideLoader();
 })
 
+document.addEventListener("turbo:submit-end", (ev) => {
+    hideLoader();
+
+    // Check if event is error: 
+    if (ev.success === false) {
+        console.log("turbo:submit-end");
+        window.location.href = "/error";
+    }
+})
+
 
 const turboEvents = [
     "turbo:click",

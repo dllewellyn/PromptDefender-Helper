@@ -39,15 +39,17 @@ type LlmScoringPromptInput struct {
 
 type LlmScorer struct {
 	InvokeRequest InvokeRequest
+	ValidateScore Validator
 }
 
 type Scorer interface {
 	Score(prompt string) (*PromptScore, error)
 }
 
-func NewLlmScorer(InvokeRequest InvokeRequest) Scorer {
+func NewLlmScorer(InvokeRequest InvokeRequest, ValidateScore Validator) Scorer {
 	return &LlmScorer{
 		InvokeRequest: InvokeRequest,
+		ValidateScore: ValidateScore,
 	}
 }
 
@@ -56,6 +58,22 @@ func (s *LlmScorer) Score(prompt string) (*PromptScore, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	message, validated, err := s.ValidateScore.Validate(response)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !validated {
+		prompt += " " + "\n\n{{ role\"model\"}}" + response + "\n\n{{ role\"user\"}}" + message + "\n\nTry again."
+
+		response, err = s.InvokeRequest(prompt)
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	score, err := parseJSON(response)

@@ -32,6 +32,7 @@ application.register("code-editor", class extends Stimulus.Controller {
 
         if (prompt === '') {
             alert('Please enter a prompt');
+            event.preventDefault();
             return;
         }
 

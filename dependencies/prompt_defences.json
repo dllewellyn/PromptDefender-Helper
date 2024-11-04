@@ -1,0 +1,29 @@
+{
+    "defences" : [
+        {
+            "id": 1,
+            "name" : "In Context Defence",
+            "description": "In context defence involves adding examples of the LLM providing answers to prompt injection and other attacks, and refusing to answer the attack."
+        },
+        {
+            "id": 2,
+            "name": "System Mode Self Reminder",
+            "description": "Self-reminder is a defence where there is a reminder late on in the chat flow of what the purpose of the chat is. This can help to keep the LLM on its intended course even when under adversial conditions."
+        },
+        {
+            "id": 3,
+            "name": "Sandwich Defence",
+            "description": "A sandwich defence is a defence where the user input is sandwiched between two other prompts that help to remind the LLM of what the intended prompt is meant to do. This is a strong defence because LLMs have a tendency to favour the last instruction given."
+        },
+        {
+            "id": 4,
+            "name": "XML Encapsulation",
+            "description": "XML Encapsulation is a defence where the user's input is encapsulated in XML tags. This should be combined with a note to the LLM that the user's input is within these tags, which provides a 'hint' to the LLM of how to treat a users input compared to the system instruction."
+        },
+        {
+            "id": 5,
+            "name": "Random Sequence Enclosure",
+            "description": "This defence is used in combination with XML encapsulation. The user's input is encapsulated in XML tags, and the tag is randomised. This is a strong defence because it makes it harder for an attacker to escape the XML tags, and it provides a simple way to scan for a a unique identifier to the user's input."
+        }
+    ]
+}

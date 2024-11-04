@@ -14,13 +14,19 @@ func AddImprover(ctx context.Context, engine *gin.Engine, improver improve.Impro
 		prompt, err := getPromptFromRequest(c)
 
 		if err != nil {
-			handleError(c, http.StatusBadRequest, "/error")
+			handleError(c, http.StatusBadRequest, "Sorry, something went wrong. Please check your request try again.")
+			return
+		}
+
+		if prompt == "" {
+			handleError(c, http.StatusBadRequest, "Sorry, something went wrong. Please check your request try again.")
 			return
 		}
 
 		cachedResponse, err := promptCache.Get(ctx, prompt+"_improve")
 		if err != nil {
-			handleError(c, http.StatusOK, "/error")
+			log.Println("Error getting cached response:", err)
+			handleError(c, http.StatusInternalServerError, "Sorry, something went wrong. Please try again.")
 			return
 		}
 
@@ -30,16 +36,17 @@ func AddImprover(ctx context.Context, engine *gin.Engine, improver improve.Impro
 		}
 
 		response, err := improver.Improve(prompt)
+
 		if err != nil {
 			log.Println(err)
-			handleError(c, http.StatusOK, "/error")
+			handleError(c, http.StatusInternalServerError, "Sorry, something went wrong. Please try again.")
 			return
 		}
 
 		err = promptCache.Set(ctx, prompt+"_improve", response)
 		if err != nil {
 			log.Println(err)
-			handleError(c, http.StatusOK, "/error")
+			handleError(c, http.StatusInternalServerError, "Sorry, something went wrong. Please try again.")
 			return
 		}
 
@@ -67,6 +74,6 @@ func getPromptFromRequest(c *gin.Context) (string, error) {
 	return c.PostForm("prompt"), nil
 }
 
-func handleError(c *gin.Context, statusCode int, redirectURL string) {
-	c.Redirect(statusCode, redirectURL)
+func handleError(c *gin.Context, statusCode int, message string) {
+	c.JSON(statusCode, gin.H{"message": message})
 }

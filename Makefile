@@ -24,7 +24,7 @@ genkit_mode:
 
 # Run tests
 test:
-	go test ./...
+	go test -cover ./...
 
 # Clean up build artifacts
 clean:
@@ -42,4 +42,11 @@ fmt:
 lint:
 	golangci-lint run
 
-.PHONY: all tidy build test clean run fmt lint
+integration-test: build
+	export PORT=8080
+	$(BUILD_DIR)/$(BINARY_NAME) &
+	sleep 5
+	BASE_URL=http://localhost:8080 go test -tags=integration ./...
+	pkill -f $(BINARY_NAME)
+
+.PHONY: all tidy build test clean run fmt lint 
