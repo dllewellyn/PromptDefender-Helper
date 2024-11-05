@@ -12,11 +12,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type DefenceLevel = int
+
+const (
+	NoDefence DefenceLevel = iota
+	PartialDefence
+	FullDefence
+)
+
 type UiDefence struct {
-	Name        string
-	Description string
-	IsPresent   bool
-	Link        string
+	Name         string
+	Description  string
+	DefenceLevel DefenceLevel
+	Link         string
 }
 
 type UiDefences struct {
@@ -26,37 +34,51 @@ type UiDefences struct {
 	Prompt      string
 }
 
+// Function to convert a float between 0.0 and 0.2 to defence level
+// 0.0 -> NoDefence
+// 0.1 -> PartialDefence
+// 0.2 -> FullDefence
+func floatToDefenceLevel(input float64) DefenceLevel {
+	if input == 0.0 {
+		return NoDefence
+	} else if input == 0.1 {
+		return PartialDefence
+	} else {
+		return FullDefence
+	}
+}
+
 func scorePromptToUiFriendlyResponse(inputPrompt string, scorePrompt *score.PromptScore, loadedDefences []dependencies.Defence) UiDefences {
 
 	var defences []UiDefence
 
 	for _, defence := range loadedDefences {
 
-		isPresent := false
+		defenceLevel := NoDefence
 
 		switch defence.Id {
 		case dependencies.InContext:
-			isPresent = scorePrompt.Defenses.InContextDefense
+			defenceLevel = floatToDefenceLevel(scorePrompt.Defenses.InContextDefense)
 		case dependencies.SystemModeSelfReminder:
-			isPresent = scorePrompt.Defenses.SystemModeSelfReminder
+			defenceLevel = floatToDefenceLevel(scorePrompt.Defenses.SystemModeSelfReminder)
 		case dependencies.SandwichDefence:
-			isPresent = scorePrompt.Defenses.SandwichDefense
+			defenceLevel = floatToDefenceLevel(scorePrompt.Defenses.SandwichDefense)
 		case dependencies.XmlEncapsulation:
-			isPresent = scorePrompt.Defenses.XMLEncapsulation
+			defenceLevel = floatToDefenceLevel(scorePrompt.Defenses.XMLEncapsulation)
 		case dependencies.RandomSequenceEnclosure:
-			isPresent = scorePrompt.Defenses.RandomSequenceEnclosure
+			defenceLevel = floatToDefenceLevel(scorePrompt.Defenses.RandomSequenceEnclosure)
 		}
 
 		defences = append(defences, UiDefence{
-			Name:        defence.Name,
-			Description: defence.Description,
-			IsPresent:   isPresent,
-			Link:        defence.Link,
+			Name:         defence.Name,
+			Description:  defence.Description,
+			DefenceLevel: defenceLevel,
+			Link:         defence.Link,
 		})
 	}
 
 	uiDefences := UiDefences{
-		Score:       scorePrompt.Score,
+		Score:       *scorePrompt.Score,
 		Explanation: scorePrompt.Explanation,
 		Defences:    defences,
 		Prompt:      inputPrompt,

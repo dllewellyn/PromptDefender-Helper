@@ -7,26 +7,24 @@ import (
 
 func TestParseJSON(t *testing.T) {
 	validJSON := `{
-		"score": 0.85,
-		"explanation": "This is a test explanation.",
-		"defenses": {
-			"in_context_defense": true,
-			"system_mode_self_reminder": false,
-			"sandwich_defense": true,
-			"xml_encapsulation": false,
-			"random_sequence_enclosure": true
-		}
-	}`
+        "explanation": "This is a test explanation.",
+        "defenses": {
+            "in_context_defense": 0.2,
+            "system_mode_self_reminder": 0.1,
+            "sandwich_defense": 0.0,
+            "xml_encapsulation": 0.2,
+            "random_sequence_enclosure": 0.1
+        }
+    }`
 	invalidJSON := `{
-		"score": 0.85,
-		"explanation": "This is a test explanation.",
-		"defenses": {
-			"in_context_defense": true,
-			"system_mode_self_reminder": false,
-			"sandwich_defense": true,
-			"xml_encapsulation": false,
-			"random_sequence_enclosure": true
-		`
+        "explanation": "This is a test explanation.",
+        "defenses": {
+            "in_context_defense": 0.2,
+            "system_mode_self_reminder": 0.1,
+            "sandwich_defense": 0.0,
+            "xml_encapsulation": 0.2,
+            "random_sequence_enclosure": 0.1
+        `
 
 	tests := []struct {
 		name      string
@@ -53,16 +51,15 @@ func TestLlmScorer_Score(t *testing.T) {
 			return "", errors.New("mock error")
 		}
 		return `{
-			"score": 0.85,
-			"explanation": "This is a test explanation.",
-			"defenses": {
-				"in_context_defense": true,
-				"system_mode_self_reminder": false,
-				"sandwich_defense": true,
-				"xml_encapsulation": false,
-				"random_sequence_enclosure": true
-			}
-		}`, nil
+            "explanation": "This is a test explanation.",
+            "defenses": {
+                "in_context_defense": 0.2,
+                "system_mode_self_reminder": 0.1,
+                "sandwich_defense": 0.0,
+                "xml_encapsulation": 0.2,
+                "random_sequence_enclosure": 0.1
+            }
+        }`, nil
 	}
 
 	scorer := NewLlmScorer(mockInvokeRequest)

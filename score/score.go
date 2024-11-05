@@ -6,15 +6,15 @@ import (
 )
 
 type Defenses struct {
-	InContextDefense        bool `json:"in_context_defense"`
-	SystemModeSelfReminder  bool `json:"system_mode_self_reminder"`
-	SandwichDefense         bool `json:"sandwich_defense"`
-	XMLEncapsulation        bool `json:"xml_encapsulation"`
-	RandomSequenceEnclosure bool `json:"random_sequence_enclosure"`
+	InContextDefense        float64 `json:"in_context_defense"`
+	SystemModeSelfReminder  float64 `json:"system_mode_self_reminder"`
+	SandwichDefense         float64 `json:"sandwich_defense"`
+	XMLEncapsulation        float64 `json:"xml_encapsulation"`
+	RandomSequenceEnclosure float64 `json:"random_sequence_enclosure"`
 }
 
 type PromptScore struct {
-	Score       float64  `json:"score"`
+	Score       *float64 `json:"score"`
 	Explanation string   `json:"explanation"`
 	Defenses    Defenses `json:"defenses"`
 }
@@ -28,6 +28,15 @@ func parseJSON(input string) (PromptScore, error) {
 	// Unmarshal the JSON into the struct
 	var result PromptScore
 	err := json.Unmarshal([]byte(cleaned), &result)
+
+	// Set score to total of all defences
+	score := 0.0
+	score += result.Defenses.InContextDefense
+	score += result.Defenses.SystemModeSelfReminder
+	score += result.Defenses.SandwichDefense
+	score += result.Defenses.XMLEncapsulation
+	score += result.Defenses.RandomSequenceEnclosure
+
 	return result, err
 }
 
