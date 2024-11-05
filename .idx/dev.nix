@@ -11,12 +11,15 @@
     # pkgs.python311Packages.pip
     # pkgs.nodejs_20
     # pkgs.nodePackages.nodemon
+    
     pkgs.gnumake
+    pkgs.hugo
   ];
 
   # Sets environment variables in the workspace
   env = {
     GCLOUD_PROJECT = "warm-poetry-436115-k6";
+    GCLOUD_LOCATION = "us-central1";
   };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"

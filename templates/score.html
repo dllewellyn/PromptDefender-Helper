@@ -13,15 +13,17 @@
             </div>
             <div class="phrases-list">
                 {{ range .Defences }}
-                {{ if .IsPresent }}
-                <div class="defence-is-present">
-                    {{ else }}
-                    <div class="defence-is-not-present">
-                        {{ end }}
-                        <div class="score-card-title">{{ .Name }}</div>
-                        <div class="score-card-subtitle">{{ .Description }}</div>
-                    </div>
+                    {{ if eq .Score 1 }}
+                        <div class="defence-is-not-present">
+                        {{ else if eq .Score 2 }}
+                        <div class="defence-is-half-point">
+                        {{ else if eq .Score 3 }}
+                        <div class="defence-is-present">
                     {{ end }}
+                            <div class="score-card-title">{{ .Name }}</div>
+                            <div class="score-card-subtitle">{{ .Description }}</div>
+                        </div>
+                {{ end }}
                     <div class="action-card">
                         <form action="/improve" method="post">
                             <input type="hidden" name="prompt" value="{{ .Prompt }}"/>

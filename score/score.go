@@ -37,6 +37,8 @@ func parseJSON(input string) (PromptScore, error) {
 	score += result.Defenses.XMLEncapsulation
 	score += result.Defenses.RandomSequenceEnclosure
 
+	result.Score = &score
+
 	return result, err
 }
 
