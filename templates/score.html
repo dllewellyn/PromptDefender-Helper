@@ -13,11 +13,11 @@
             </div>
             <div class="phrases-list">
                 {{ range .Defences }}
-                    {{ if eq .Score 1 }}
+                        {{ if eq .DefenceLevel 0 }}
                         <div class="defence-is-not-present">
-                        {{ else if eq .Score 2 }}
+                        {{ else if eq .DefenceLevel 1 }}
                         <div class="defence-is-half-point">
-                        {{ else if eq .Score 3 }}
+                        {{ else if eq .DefenceLevel 2 }}
                         <div class="defence-is-present">
                     {{ end }}
                             <div class="score-card-title">{{ .Name }}</div>
