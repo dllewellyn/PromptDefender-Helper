@@ -90,7 +90,19 @@ func scorePromptToUiFriendlyResponse(inputPrompt string, scorePrompt *score.Prom
 func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, promptCache cache.Cache, loadedDefences []dependencies.Defence) {
 	engine.POST("/score", func(c *gin.Context) {
 
-		prompt := c.PostForm("prompt")
+		var prompt string
+		var requestBody struct {
+			Prompt string `json:"prompt"`
+		}
+		if c.Request.Header.Get("Content-Type") == "application/json" {
+			if err := c.ShouldBindJSON(&requestBody); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON payload"})
+				return
+			}
+			prompt = requestBody.Prompt
+		} else {
+			prompt = c.PostForm("prompt")
+		}
 
 		cachedResponse, err := promptCache.Get(ctx, prompt+"_score")
 
@@ -110,7 +122,15 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 				return
 			}
 
-			c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, &response, loadedDefences))
+			// Check Content-Type header for desired response format
+			if c.Request.Header.Get("Content-Type") == "application/json" {
+				c.JSON(http.StatusOK, gin.H{
+					"response": response,
+				})
+			} else {
+				c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, &response, loadedDefences))
+			}
+
 			return
 		}
 
@@ -123,7 +143,14 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 
 		cacheResponse(response, promptCache, prompt+"_score")
 
-		c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, response, loadedDefences))
+		// Check Content-Type header for desired response format
+		if c.Request.Header.Get("Content-Type") == "application/json" {
+			c.JSON(http.StatusOK, gin.H{
+				"response": response,
+			})
+		} else {
+			c.HTML(http.StatusOK, "score.html", scorePromptToUiFriendlyResponse(prompt, response, loadedDefences))
+		}
 	})
 }
 

@@ -13,8 +13,8 @@ type DefenceType = int
 const (
 	InContext DefenceType = iota
 	SystemModeSelfReminder
-	SandwichDefence
 	XmlEncapsulation
+	SandwichDefence
 	RandomSequenceEnclosure
 )
 

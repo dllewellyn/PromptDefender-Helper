@@ -1,0 +1,64 @@
+POST http://localhost:9002/score
+Content-Type: application/json
+
+{
+    "prompt": "Your job is to translate users input from English into French: <user_input>{user_input}</user_input>"
+}
+
+### Test with a too short prompt (JSON)
+POST http://localhost:9002/score
+Content-Type: application/json
+
+{
+    "prompt": "short"
+}
+
+### Test with a too long prompt (JSON)
+POST http://localhost:8080/score
+Content-Type: application/json
+
+{
+    "prompt": "This is a very long prompt that exceeds the maximum allowed length.  This is a very long prompt that exceeds the maximum allowed length. This is a very long prompt that exceeds the maximum allowed length."
+}
+
+### Test with an invalid prompt (not a string) (JSON)
+POST http://localhost:8080/score
+Content-Type: application/json
+
+{
+  "prompt": 123
+}
+
+### Test with a missing prompt (JSON)
+POST http://localhost:8080/score
+Content-Type: application/json
+
+{}
+
+### Test with a valid prompt (Form-Data)
+POST http://localhost:8080/score
+Content-Type: application/x-www-form-urlencoded
+
+prompt=This is a valid prompt.
+
+### Test with a too short prompt (Form-Data)
+POST http://localhost:8080/score
+Content-Type: application/x-www-form-urlencoded
+
+prompt=short
+
+### Test with a too long prompt (Form-Data)
+POST http://localhost:8080/score
+Content-Type: application/x-www-form-urlencoded
+
+prompt=This is a very long prompt that exceeds the maximum allowed length. This is a very long prompt that exceeds the maximum allowed length. This is a very long prompt that exceeds the maximum allowed length.
+
+### Test with an invalid prompt (not a string) (Form-Data)
+POST http://localhost:8080/score
+Content-Type: application/x-www-form-urlencoded
+
+prompt=123
+
+### Test with a missing prompt (Form-Data)
+POST http://localhost:8080/score
+Content-Type: application/x-www-form-urlencoded
