@@ -1,5 +1,6 @@
 .loading-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -34,4 +35,26 @@
     100% {
         background-position: left;
     }
+}
+
+.tip-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    background: #f0f0f0;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Lato', Arial, Helvetica, sans-serif;
+    color: #333;
+}
+
+.tip-container i {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.tip-text {
+    font-size: 1em;
+    font-weight: 400;
 }

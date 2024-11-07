@@ -5,9 +5,11 @@ import (
 	"PromptDefender-Keep/dependencies"
 	"PromptDefender-Keep/endpoints"
 	"PromptDefender-Keep/improve"
+	"PromptDefender-Keep/logger"
 	"PromptDefender-Keep/score"
 	"context"
 	"fmt"
+	"go.uber.org/zap"
 	"log"
 	"os"
 
@@ -24,12 +26,15 @@ func main() {
 
 	r := gin.Default()
 
-	log.Println("Serving directory ./public at /")
+	logger.Log.Debug("Serving directory ./public at /")
+
 	r.Static("/", "./public")
 
 	r.LoadHTMLGlob("templates/*.html")
 
 	ctx := context.Background()
+
+	logger.Log.Debug("Initialising genkit")
 
 	dependencies.InitialiseGenkit(ctx)
 
@@ -48,12 +53,12 @@ func main() {
 		),
 		fx.Invoke(func(scorer score.Scorer, improver improve.Improver, loadedDefences []dependencies.Defence) {
 			if os.Getenv("TEST_MODE") == "true" {
-				log.Println("Initialising genkit in test mode")
+				logger.Log.Info("Initialising genkit in test mode")
 				if err := genkit.Init(ctx, nil); err != nil {
 					log.Fatal(err)
 				}
 			} else {
-				log.Println("Starting server on port", os.Getenv("PORT"))
+				logger.Log.Info("Starting server on port", zap.String("port", os.Getenv("PORT")))
 
 				cache := cache2.NewInMemoryCache()
 				endpoints.AddScorer(ctx, r, scorer, cache, loadedDefences)
@@ -62,7 +67,7 @@ func main() {
 				err := r.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
 
 				if err != nil {
-					log.Fatal(err)
+					logger.Log.Fatal("Error starting server", zap.Error(err))
 				}
 			}
 		}),
@@ -76,12 +81,12 @@ func WriteServiceAccountKeyToFile() {
 
 		serviceAccountKey := os.Getenv("SERVICE_ACCOUNT_KEY")
 		if serviceAccountKey == "" {
-			log.Fatal("SERVICE_ACCOUNT_KEY environment variable not set")
+			logger.Log.Fatal("SERVICE_ACCOUNT_KEY environment variable not set")
 		}
 
 		file, err := os.Create("service-account.json")
 		if err != nil {
-			log.Fatal(err)
+			logger.Log.Fatal("Error creating account key", zap.Error(err))
 		}
 
 		_, err = file.WriteString(serviceAccountKey)
