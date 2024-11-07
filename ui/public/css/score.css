@@ -117,6 +117,24 @@
     color: #666;
 }
 
+.learn-more-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.learn-more-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
 @media (min-width: 768px) {
     .phrases-list {
         grid-template-columns: repeat(3, 1fr);

@@ -1,6 +1,21 @@
+const tips = [
+    "Tip: You can use keyboard shortcuts to navigate faster!",
+    "Tip: Double-click on a word to select it.",
+    "Tip: Use Ctrl + F to find text quickly.",
+    "Tip: Press Ctrl + S to save your work frequently.",
+    "Tip: Use the search bar to find specific settings.",
+    "Tip: Customize your theme for better visibility."
+];
+
+function randomizeTip() {
+    const randomIndex = Math.floor(Math.random() * tips.length);
+    document.getElementById('tipText').innerText = tips[randomIndex];
+}
+
 document.addEventListener("turbo:before-fetch-request", () => {
     console.log("turbo:before-fetch-request");
     showLoader();
+    randomizeTip();
 });
 
 // Listen for turbo errors
