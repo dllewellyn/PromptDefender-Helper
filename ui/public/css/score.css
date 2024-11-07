@@ -1,7 +1,6 @@
 
 .score-container {
     font-family: Arial, sans-serif;
-    background: #f7f7fa;
     display: flex;
     justify-content: center;
     padding: 20px;
@@ -11,7 +10,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 100%;
+    width: auto;
     max-width: 1200px;
 }
 
@@ -42,13 +41,14 @@
 }
 
 .explanation-card {
-    background: #ffffff;
+    background: #292929;
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
+    color: #f0f0f0
 }
 
 .phrases-list {
@@ -70,13 +70,13 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.2s;
-    background: #f0f0f0;
+    background: #292929;
+    color: #f0f0f0 !important;
+    min-height: 140px;
 }
 
 .action-card {
     border-left: 10px solid #0c0c0c;
-    background: #333333;
-    color: #fff !important;
 }
 
 .defence-is-half-point {
@@ -102,19 +102,19 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 1.5em;
-    color: #666;
+    color: #f0f0f0;
 }
 
 .score-card-title {
     font-size: 1.4em;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #333;
+    color: #f0f0f0;
 }
 
 .score-card-subtitle {
     font-size: 1em;
-    color: #666;
+    color: #f0f0f0;
 }
 
 @media (min-width: 768px) {

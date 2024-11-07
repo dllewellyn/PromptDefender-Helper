@@ -10,80 +10,55 @@ button,
 .navbar-brand,
 .nav-link {
     font-family: 'Lato', Arial, Helvetica, sans-serif;
-    color: black;
+    color: white;
+}
+
+a {
+    text-decoration: none;
 }
 
 h1, h2, h3 {
     font-family: 'Lato', Arial, Helvetica, sans-serif;
     font-weight: 700; /* Bold for headings */
-    color: #000000; /* Pure Black */
+    color: white; /* Pure Black */
     text-transform: uppercase;
-}
-
-.caps {
-    font-size: 1.25rem;
-    font-weight: 700; /* Bold */
-    text-transform: uppercase;
-    color: #000000; /* Pure Black */
-    font-family: 'Lato', Arial, Helvetica, sans-serif;
 }
 
 i {
-    color: #333333; /* Dark Grey */
+    color: white; /* Dark Grey */
 }
 
 .background-gradient {
     background: linear-gradient(to bottom, #333333, #4d4d4d, #666666); /* Monochromatic gradient */
 }
 
-main {
-    /* Using a light grey background */
-    background-color: #D9D9D9;
-    color: #333333; /* Dark Grey */
+main, body {
+    background-color: #333333;
 }
 
-.btn-secondary {
-    background-color: #FFFFFF !important; /* Dark Grey */
-    border-color: #333333 !important; /* Dark Grey */
-    color: #333333 !important; /* White */
-    transition: transform 0.2s, background 0.2s; /* Hover animation */
-    text-transform: uppercase;
-    font-weight: 700; /* Bold */
-    padding: 1em;
-}
-
-.btn-secondary:hover,
-.btn-secondary:focus,
-.btn-secondary:active {
-    border-color: #333333 !important; /* Dark Grey */
-    background: linear-gradient(45deg, #333333, #4d4d4d); /* Dark Grey gradient */
-    transform: scale(1.1);
-    color: #FFFFFF !important;
-}
 
 .btn-primary {
-    background-color: #000000 !important; /* Pure Black */
-    border-color: #000000 !important; /* Pure Black */
-    color: #FFFFFF !important; /* White */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    transition: transform 0.2s, background 0.2s; /* Hover animation */
-    text-transform: uppercase;
-    font-weight: 700; /* Bold */
-    padding: 1em;
+    background-color: #292929;
+    border: 1px solid #bdbdbd;
+    color: #bdbdbd;
+    padding: 0.5em 1em;
+    border-radius: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
 }
 
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
-    border-color: #333333 !important; /* Dark Grey */
-    background: linear-gradient(45deg, #333333, #4d4d4d); /* Dark Grey gradient */
-    transform: scale(1.1);
+    background-color: #bdbdbd;
+    border-color: #757575;
+    color: #212121;
 }
+
 
 section {
     padding: 20px 0;
     align-content: center;
-    background-color: #FFFFFF; /* White */
 }
 
 .highlight {
@@ -103,21 +78,15 @@ section {
     padding: 0 20px;
 }
 
+.main-container {
+    display: flex;
+    height: 100vh;
+    padding: 20px;
+    direction: row;
+}
+
 @media (min-width: 1024px) {
     .cards-container {
         max-width: 66.67%; /* 2/3rd of the screen */
-    }
-}
-
-/* Defenses Grid */
-.defenses-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1em;
-}
-
-@media (min-width: 768px) {
-    .defenses-grid {
-        grid-template-columns: repeat(3, 1fr);
     }
 }

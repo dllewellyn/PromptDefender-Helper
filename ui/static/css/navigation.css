@@ -1,0 +1,41 @@
+/* navigation.css */
+
+nav {
+    padding: 1rem;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.navbar-nav {
+    list-style: none; /* Remove default list styling */
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    display: inline-block; /* Arrange items horizontally */
+    margin-right: 1rem; /* Add spacing between items */
+}
+
+.nav-link {
+    color: #343a40; /* Dark gray text color */
+    text-decoration: none; /* Remove underlines */
+}
+
+.nav-link:hover {
+    color: #007bff; /* Blue hover color */
+}
+
+.navbar-toggler {
+    border: none; /* Remove default button border */
+    background-color: transparent; /* Make button transparent */
+    padding: 0;
+}
+
+.navbar-light .navbar-brand,
+.navbar-light .navbar-nav .nav-link {
+    color: #e5e5e5; /* Dark gray text color for light navbar */
+}
+

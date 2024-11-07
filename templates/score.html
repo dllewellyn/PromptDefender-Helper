@@ -1,48 +1,143 @@
-<turbo-frame id="container">
+<turbo-frame id="container" data-turbo-action="advance">
     <div class="score-container">
         <div class="cards-container">
             <div class="score-gauge-container">
-                <h2>Score</h2>
-                <div class="score-gauge">
-                    <div class="score-gauge-number">{{.Score}}</div>
+                <h2>Prompt security assessment</h2>
+                <div id="score-gauge">
+                    <canvas id="radarChart" style="height: 600px; width: 600px"></canvas>
                 </div>
             </div>
-            <div class="explanation-card">
-                <h3>Explanation</h3>
-                <p>{{.Explanation}}</p>
-            </div>
+
             <div class="phrases-list">
                 {{ range .Defences }}
-                        {{ if eq .DefenceLevel 0 }}
-                        <div class="defence-is-not-present">
-                        {{ else if eq .DefenceLevel 1 }}
-                        <div class="defence-is-half-point">
+                {{ if eq .DefenceLevel 0 }}
+                <div class="defence-is-not-present">
+                    {{ else if eq .DefenceLevel 1 }}
+                    <div class="defence-is-half-point">
                         {{ else if eq .DefenceLevel 2 }}
                         <div class="defence-is-present">
-                    {{ end }}
+                            {{ end }}
                             <div class="score-card-title">{{ .Name }}</div>
                             <div class="score-card-subtitle">{{ .Description }}</div>
                         </div>
-                {{ end }}
-                    <div class="action-card">
-                        <form action="/improve" method="post">
-                            <input type="hidden" name="prompt" value="{{ .Prompt }}"/>
-                            <p  class="score-card-title" style="color: white">Automatically improve prompt</p>
-                            <button type="submit" class="btn btn-secondary">Improve now</button>
-                        </form> 
+                        {{ end }}
+
+                        <div class="action-card">
+                            <form action="/improve" method="post">
+                                <input type="hidden" name="prompt" value="{{ .Prompt }}" />
+                                <div class="score-card-title">Automatically improve prompt</div>
+                                <br />
+                                <button type="submit" class="btn btn-primary"><i
+                                        class="fa-solid fa-arrow-up-right-from-square"></i>. Improve now</button>
+                            </form>
+                        </div>
+
                     </div>
+
                 </div>
-
             </div>
+            <input type="hidden" name="defences" />
         </div>
-    </div>
-    <script>
-        var score = {{ .Score }};
-        var scoreGauge = document.querySelector('.score-gauge');
-        var scoreNumber = document.querySelector('.score-gauge-number');
+        <script>
+            const radarChartData = {
+                labels: [
+                    {{ range .Defences }}
+            '{{ .Name }}',
+                {{ end }}
+                ],
+            datasets: [{
+                label: 'Keep Defence Scores',
+                data: [
+                    {{ range .Defences }}
+                        {{ .DefenceLevel }},
+            {{ end }}
+            ],
+            color: '#ffffff',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 2,
+            pointHoverRadius: 10,
+                }]
+            };
 
+            const radarChartConfig = {
+                type: 'radar',
+                data: radarChartData,
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 2,
+                            min: 0,
+                            ticks: {
+                                stepSize: 1,
+                                color: '#ffffff', // Light color for tick labels
+                                backdropColor: 'rgba(0, 0, 0, 0)', // Transparent backdrop
+                                callback: function(value) {
+                                    return value.toFixed(1);
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.2)' // Light color for grid lines
+                            },
+                            angleLines: {
+                                color: 'rgba(255, 255, 255, 0.2)' // Light color for angle lines
+                            },
+                            pointLabels: {
+                                color: '#ffffff', // Light color for point labels
+                                font: {
+                                    size: 16 // Adjust the font size here
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw;
+                                    return `${label}\n${value}`;
+                                },
+                            },
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            titleFont: {
+                                size: 16,
+                                weight: 'bold',
+                                color: '#ffffff' // Light color for tooltip title
+                            },
+                            bodyFont: {
+                                size: 14,
+                                color: '#ffffff' // Light color for tooltip body
+                            },
+                            footerFont: {
+                                size: 12,
+                                style: 'italic',
+                                color: '#ffffff' // Light color for tooltip footer
+                            },
+                            padding: 10,
+                            displayColors: false
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            // Get the index of the clicked element
+                            const index = elements[0].index;
+                            const defenceName = radarChartData.labels[index];
+                            const score = radarChartData.datasets[0].data[index];
+                            // Customize the tooltip text
+                            const tooltipText = `Defence: ${defenceName}\nScore: ${score}`;
+                            alert(tooltipText);
+                        }
+                    }
+                }
+            };
 
-        scoreGauge.style.background = getGaugeColor(score * 10);
-        scoreNumber.textContent = score;
-    </script>
+            const radarChartCtx = document.getElementById('radarChart').getContext('2d');
+            new Chart(radarChartCtx, radarChartConfig);
+        </script>
 </turbo-frame>

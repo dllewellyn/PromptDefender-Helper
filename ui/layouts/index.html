@@ -15,49 +15,37 @@
 </head>
 <body>
 
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Prompt Defender</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <!-- <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/about">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/contact">Contact</a>
+      </li>
+    </ul> -->
+  </div>
+</nav>
+
 <div id="loader" class="main-container" style="display: none">
-    <div class="loading-container">
-        <div class="loader"></div>
-    </div>
+  <div class="loading-container">
+      <div class="loader"></div>
+  </div>
 </div>
 
-<turbo-frame id="container" data-turbo-action="advance">
-    <div class="main-container" data-controller="code-editor">
-        <form id="promptForm" method="post" data-code-editor-target="form" data-turbo-frame="container" action="/score">
-            <div id="editor-container" class="editor-container">
-                <div class="prompt-instruction">Enter your prompt into the editor below:</div>
-                <label for="code-editor">
-                    Place your prompt here
-                </label><textarea id="code-editor" data-code-editor-target="editor" name="prompt"></textarea>
-            </div>
+{{ partial "prompt_start.html" . }}
 
-            <div class="actions-container">
-                <h1>Prompt Defender - Keep</h1>
-                <button class="btn-primary" type="button" id="tour" data-code-editor-target="tour"
-                        data-action="click->code-editor#takeTour">Take a tour
-                </button>
-                <button class="btn-primary" type="button" id="example" data-code-editor-target="example"
-                        data-action="click->code-editor#loadExample">Try with an example
-                </button>
-                <button class="btn-primary" type="submit" id="score" data-code-editor-target="score"
-                        data-action="click->code-editor#setFormAction" data-action-value="/score">
-                    Score your prompt
-                </button>
-                <button class="btn-primary" type="submit" id="improve" data-code-editor-target="improve"
-                        data-action="click->code-editor#setFormAction" data-action-value="/improve">
-                    Suggest improvements
-                </button>
-            </div>
-            <input type="hidden" name="prompt" data-code-editor-target="prompt"/>
-        </form>
-    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            runTour();
-        });
-    </script>
-</turbo-frame>
 </body>
 
 </html>

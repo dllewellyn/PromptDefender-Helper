@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<meta name="generator" content="Hugo 0.127.0">
+	<meta name="generator" content="Hugo 0.120.3">
     <link rel="stylesheet" href="/css/app.css">
 <style>
     .form-container {
@@ -25,6 +25,12 @@
 <link rel="stylesheet" href="/css/index.css">
 <link rel="stylesheet" href="/css/card.css">
 <link rel="stylesheet" href="/css/score.css">
+<link rel="stylesheet" href="/css/darcula.css">
+<link rel="stylesheet" href="/css/navigation.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script src="/js/tour.js"></script>
 <script src="/js/gauge-colour.js"></script>
 <script async src="/js/index-controller.js"></script>
@@ -35,7 +41,7 @@
 <script src="/js/loading.js"></script>
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<script src="https://kit.fontawesome.com/d4b2efa5e8.js" crossorigin="anonymous"></script>
 
     <title>Prompt Defender - Keep</title>
 
@@ -49,49 +55,64 @@
 </head>
 <body>
 
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Prompt Defender</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    
+  </div>
+</nav>
+
 <div id="loader" class="main-container" style="display: none">
-    <div class="loading-container">
-        <div class="loader"></div>
-    </div>
+  <div class="loading-container">
+      <div class="loader"></div>
+  </div>
 </div>
 
 <turbo-frame id="container" data-turbo-action="advance">
-    <div class="main-container" data-controller="code-editor">
-        <form id="promptForm" method="post" data-code-editor-target="form" data-turbo-frame="container" action="/score">
-            <div id="editor-container" class="editor-container">
-                <div class="prompt-instruction">Enter your prompt into the editor below:</div>
-                <label for="code-editor">
-                    Place your prompt here
-                </label><textarea id="code-editor" data-code-editor-target="editor" name="prompt"></textarea>
-            </div>
+    <div class="score-container">
+        <div class="cards-container"></div>
+        <div id="prompt_start" style="text-align: center;">
+            <h1>Welcome to Prompt Defender</h1>
 
-            <div class="actions-container">
-                <h1>Prompt Defender - Keep</h1>
-                <button class="btn-primary" type="button" id="tour" data-code-editor-target="tour"
-                        data-action="click->code-editor#takeTour">Take a tour
-                </button>
-                <button class="btn-primary" type="button" id="example" data-code-editor-target="example"
-                        data-action="click->code-editor#loadExample">Try with an example
-                </button>
-                <button class="btn-primary" type="submit" id="score" data-code-editor-target="score"
-                        data-action="click->code-editor#setFormAction" data-action-value="/score">
-                    Score your prompt
-                </button>
-                <button class="btn-primary" type="submit" id="improve" data-code-editor-target="improve"
-                        data-action="click->code-editor#setFormAction" data-action-value="/improve">
-                    Suggest improvements
-                </button>
+            <p>The easiest way to keep your prompts safe from attacks. Using Prompt Defender,
+                you can check the security of your existing prompts using our Score function, and you can automatically
+                generate a more
+                secure prompt using our Improve function.</p>
+
+            <p>To get started, please select one of the following options for how to give us
+                your prompt:</p>
+
+            <div class="phrases-list">
+
+                <a href="/input">
+                    <div class="action-card">
+                        <p class="score-card-title"><i class="fa-regular fa-keyboard fa-xl"></i> Input your prompt
+                        </p>
+                        <p class="score-card-subtitle">Copy and paste your existing prompt - or create a new one -
+                            in
+                            the
+                            text
+                            editor</p>
+                    </div>
+                </a>
+                <a href="/input?type=example">
+                    <div class="action-card">
+                        <p class="score-card-title"><i class="fa-solid fa-vial fa-xl"></i> Use an example</p>
+                        <p class="score-card-subtitle">Test out Prompt Defender with an example prompt</p>
+                    </div>
+                </a>
             </div>
-            <input type="hidden" name="prompt" data-code-editor-target="prompt"/>
-        </form>
+        </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            runTour();
-        });
-    </script>
+    </div>
 </turbo-frame>
+
+
 </body>
 
 </html>

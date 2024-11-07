@@ -1,6 +1,8 @@
-document.addEventListener("turbo:before-fetch-request", () => {
-    console.log("turbo:before-fetch-request");
-    showLoader();
+document.addEventListener("turbo:submit-start", (ev) => {
+    if (ev != undefined && ev !== null) {
+        console.log("turbo:before-fetch-request");
+        showLoader();
+    }
 });
 
 // Listen for turbo errors
