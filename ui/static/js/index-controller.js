@@ -5,6 +5,13 @@ application.register("code-editor", class extends Stimulus.Controller {
     static targets = ["tour", "example", "score", "improve", "editor", "form", "prompt"];
 
     connect() {
+
+        // Remove all CodeMirror elements
+        let codeMirrorElements = document.getElementsByClassName('CodeMirror');
+        while (codeMirrorElements.length > 0) {
+            codeMirrorElements[0].parentNode.removeChild(codeMirrorElements[0]);
+        }
+
         var editorTarget = this.editorTarget.value;
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -29,6 +36,10 @@ application.register("code-editor", class extends Stimulus.Controller {
         }
     }
 
+    disconnect() {
+        this.editor.toTextArea();
+    }
+
     refresh() {
         this.editor.refresh();
     }
@@ -49,6 +60,7 @@ application.register("code-editor", class extends Stimulus.Controller {
         const action = event.currentTarget.dataset.actionValue;
         this.formTarget.action = action;
         this.promptTarget.value = this.editor.getValue();
+        this.editor.save();
 
     }
 

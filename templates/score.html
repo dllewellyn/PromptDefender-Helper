@@ -40,19 +40,14 @@
             <input type="hidden" name="defences" />
         </div>
         <script>
-            const radarChartData = {
-                labels: [
-                    {{ range .Defences }}
-            '{{ .Name }}',
-                {{ end }}
-                ],
+
+           
+            function loadRadarData(labels, data) {
+            let radarChartData = {
+                labels:  labels,
             datasets: [{
                 label: 'Keep Defence Scores',
-                data: [
-                    {{ range .Defences }}
-                        {{ .DefenceLevel }},
-            {{ end }}
-            ],
+                data: data,
             color: '#ffffff',
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgba(54, 162, 235, 1)',
@@ -65,7 +60,7 @@
                 }]
             };
 
-            const radarChartConfig = {
+            let radarChartConfig = {
                 type: 'radar',
                 data: radarChartData,
                 options: {
@@ -138,7 +133,13 @@
                 }
             };
 
-            const radarChartCtx = document.getElementById('radarChart').getContext('2d');
+            let radarChartCtx = document.getElementById('radarChart').getContext('2d');
             new Chart(radarChartCtx, radarChartConfig);
+        }
+
+        loadRadarData(
+            [{{ range .Defences }}'{{ .Name }}',{{ end }}],
+            [{{ range .Defences }}{{ .DefenceLevel }},{{ end }}]
+        )
         </script>
 </turbo-frame>
