@@ -8,7 +8,6 @@
             prompt defences, or else automatically add prompt defences to your prompt
         </p>
 
-
         <form id="promptForm" method="post" data-code-editor-target="form" data-turbo-frame="container" action="/score">
             <div class="actions-container">
                 <button class="btn-primary" type="submit" id="score" data-code-editor-target="score"
@@ -21,10 +20,15 @@
                     <i class="fa-solid fa-lightbulb"></i>  Suggest improvements
                 </button>
             </div>
-            <div id="editor-container" class="editor-container">
+            <div class="file-upload-container" style="text-align: center; padding: 0 20%;">
+                <label for="file-upload" class="file-upload-label">Upload a file</label>
+                <input type="file" id="file-upload" class="file-upload-input" data-code-editor-target="fileUpload" />
+            </div>
+            <div id="editor-container" class="editor-container" style="display: none;">
                 <label for="code-editor"></label>
                 <textarea id="code-editor" data-code-editor-target="editor" name="prompt"></textarea>
             </div>
+
             <input type="hidden" name="prompt" data-code-editor-target="prompt" />
         </form>
     </div>

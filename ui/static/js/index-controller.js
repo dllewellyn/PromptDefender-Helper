@@ -2,7 +2,7 @@ const application = Stimulus.Application.start();
 
 application.register("code-editor", class extends Stimulus.Controller {
 
-    static targets = ["tour", "example", "score", "improve", "editor", "form", "prompt"];
+    static targets = ["tour", "example", "score", "improve", "editor", "form", "prompt", "fileUpload"];
 
     connect() {
 
@@ -24,6 +24,7 @@ application.register("code-editor", class extends Stimulus.Controller {
             mode: "text/x-markdown"
         });
 
+        this.fileUploadTarget.addEventListener('change', this.handleFileUpload.bind(this));
 
         if (type === 'example') {
             this.loadExample();
@@ -66,5 +67,19 @@ application.register("code-editor", class extends Stimulus.Controller {
 
     takeTour() {
         runTour(true);
+    }
+
+    handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const contents = e.target.result;
+                this.editor.setValue(contents);
+                this.editor.refresh();
+                document.getElementById('editor-container').style.display = 'block';
+            };
+            reader.readAsText(file);
+        }
     }
 })
