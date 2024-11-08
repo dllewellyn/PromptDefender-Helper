@@ -1,8 +1,11 @@
 package score
 
 import (
+	"PromptDefender-Keep/logger"
 	"encoding/json"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
 type Defenses struct {
@@ -28,6 +31,10 @@ func parseJSON(input string) (PromptScore, error) {
 	// Unmarshal the JSON into the struct
 	var result PromptScore
 	err := json.Unmarshal([]byte(cleaned), &result)
+	if err != nil {
+		logger.Log.Error("Error unmarshalling JSON", zap.Error(err))
+		return result, err
+	}
 
 	// Set score to total of all defences
 	score := 0.0

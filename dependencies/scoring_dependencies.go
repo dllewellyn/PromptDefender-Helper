@@ -1,21 +1,23 @@
 package dependencies
 
 import (
+	"PromptDefender-Keep/logger"
 	"PromptDefender-Keep/score"
 	"context"
+
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
 	"github.com/firebase/genkit/go/plugins/dotprompt"
 	"github.com/invopop/jsonschema"
 	"go.uber.org/fx"
-	"log"
+	"go.uber.org/zap"
 )
 
 func ProvideScoringPrompt(model ai.Model, reflector *jsonschema.Reflector) *dotprompt.Prompt {
 	prompt, err := dotprompt.Open("scoring_prompt")
 	if err != nil {
-		log.Printf("Error opening scoring prompt: %v", err)
-		log.Fatal(err)
+		logger.Log.Error("Error opening scoring prompt", zap.Error(err))
+		logger.Log.Fatal("Error opening scoring prompt", zap.Error(err))
 	}
 
 	scoreLlmPrompt, err := dotprompt.Define("scoreLlm.prompt", prompt.TemplateText,
@@ -26,8 +28,8 @@ func ProvideScoringPrompt(model ai.Model, reflector *jsonschema.Reflector) *dotp
 		},
 	)
 	if err != nil {
-		log.Printf("Error defining scoreLlm.prompt: %v", err)
-		log.Fatal(err)
+		logger.Log.Error("Error defining scoreLlm.prompt", zap.Error(err))
+		logger.Log.Fatal("Error defining scoreLlm.prompt", zap.Error(err))
 	}
 	return scoreLlmPrompt
 }

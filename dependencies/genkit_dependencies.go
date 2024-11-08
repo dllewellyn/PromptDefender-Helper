@@ -2,8 +2,11 @@ package dependencies
 
 import (
 	"context"
-	"log"
 	"os"
+
+	"PromptDefender-Keep/logger"
+
+	"go.uber.org/zap"
 
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/plugins/dotprompt"
@@ -19,7 +22,7 @@ func InitialiseGenkit(ctx context.Context) {
 		Location:      os.Getenv("GCLOUD_LOCATION"),
 		ClientOptions: []option.ClientOption{option.WithCredentialsFile("service-account.json")},
 	}); err != nil {
-		log.Fatal(err)
+		logger.Log.Fatal("Error initializing Vertex AI", zap.Error(err))
 	}
 
 	dotprompt.SetDirectory("prompts")
@@ -28,7 +31,7 @@ func InitialiseGenkit(ctx context.Context) {
 		ctx,
 		googlecloud.Config{ProjectID: os.Getenv("GCLOUD_PROJECT")},
 	); err != nil {
-		log.Fatal(err)
+		logger.Log.Fatal("Error initializing Google Cloud", zap.Error(err))
 	}
 
 }
@@ -36,7 +39,7 @@ func InitialiseGenkit(ctx context.Context) {
 func ProvideModel() ai.Model {
 	g := vertexai.Model("gemini-1.5-pro")
 	if g == nil {
-		log.Fatal("Model is nil")
+		logger.Log.Fatal("Model is nil")
 	}
 
 	return g

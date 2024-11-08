@@ -2,21 +2,22 @@ package dependencies
 
 import (
 	"PromptDefender-Keep/improve"
+	"PromptDefender-Keep/logger"
 	"context"
-	"log"
 
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
 	"github.com/firebase/genkit/go/plugins/dotprompt"
 	"github.com/invopop/jsonschema"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 )
 
 func ProvideImprovePrompt(model ai.Model, reflector *jsonschema.Reflector) *dotprompt.Prompt {
 	prompt, err := dotprompt.Open("suggest_improvements")
 
 	if err != nil {
-		log.Fatal(err)
+		logger.Log.Fatal("Error opening suggest_improvements prompt", zap.Error(err))
 	}
 
 	scoreLlmPrompt, err := dotprompt.Define("suggest_improvements.prompt", prompt.TemplateText,
@@ -28,7 +29,7 @@ func ProvideImprovePrompt(model ai.Model, reflector *jsonschema.Reflector) *dotp
 	)
 
 	if err != nil {
-		log.Fatal(err)
+		logger.Log.Fatal("Error defining suggest_improvements.prompt", zap.Error(err))
 	}
 	return scoreLlmPrompt
 }

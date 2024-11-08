@@ -1,6 +1,10 @@
 package improve
 
-import "golang.org/x/exp/rand"
+import (
+	"PromptDefender-Keep/logger"
+
+	"golang.org/x/exp/rand"
+)
 
 type Improver interface {
 	Improve(input string) (string, error)
@@ -16,6 +20,9 @@ type LlmPromptImproverInput struct {
 }
 
 func NewLlmImprover(improveFunc func(input string, randomSequence string) (string, error)) *LlmImprover {
+	if improveFunc == nil {
+		logger.Log.Fatal("improveFunc is nil")
+	}
 	return &LlmImprover{ImproveFunc: improveFunc}
 }
 

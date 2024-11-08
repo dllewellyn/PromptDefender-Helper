@@ -9,9 +9,9 @@ import (
 	"PromptDefender-Keep/score"
 	"context"
 	"fmt"
-	"go.uber.org/zap"
-	"log"
 	"os"
+
+	"go.uber.org/zap"
 
 	"github.com/firebase/genkit/go/genkit"
 	"github.com/gin-gonic/gin"
@@ -55,7 +55,7 @@ func main() {
 			if os.Getenv("TEST_MODE") == "true" {
 				logger.Log.Info("Initialising genkit in test mode")
 				if err := genkit.Init(ctx, nil); err != nil {
-					log.Fatal(err)
+					logger.Log.Fatal("Error initializing genkit", zap.Error(err))
 				}
 			} else {
 				logger.Log.Info("Starting server on port", zap.String("port", os.Getenv("PORT")))
@@ -90,5 +90,8 @@ func WriteServiceAccountKeyToFile() {
 		}
 
 		_, err = file.WriteString(serviceAccountKey)
+		if err != nil {
+			logger.Log.Fatal("Error writing service account key to file", zap.Error(err))
+		}
 	}
 }
