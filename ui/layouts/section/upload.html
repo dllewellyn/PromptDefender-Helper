@@ -1,0 +1,38 @@
+{{ define "main" }}
+<turbo-frame id="container" data-turbo-action="advance">
+    <div class="main-container" data-controller="upload-file">
+        <div class="prompt-instruction" style="text-align: center; padding: 0 20%;">
+            Upload your prompt file below
+        </div>
+        <p style="text-align: center; padding: 0 20%;">
+            Then, you can either score your prompt—providing you with a security rating for how well you are
+            implementing prompt defences—or automatically add prompt defences to your prompt.
+        </p>
+
+        <form id="dropzone" method="post" data-upload-file-target="form" data-turbo-frame="container" action="/score">
+            <div class="actions-container">
+                <button class="btn-primary" type="submit" id="score" data-upload-file-target="score"
+                    data-action="click->upload-file#setFormAction" data-action-value="/score">
+                    <i class="fa-solid fa-check"></i> Score your prompt
+                </button>
+
+                <button class="btn-primary" type="submit" id="improve" data-upload-file-target="improve"
+                    data-action="click->upload-file#setFormAction" data-action-value="/improve">
+                    <i class="fa-solid fa-lightbulb"></i> Suggest improvements
+                </button>
+            </div>
+            <div class="file-upload-container" style="text-align: center; padding: 0 20%;">
+                <div class="dropzone-custom" id="dz" style="margin-top: 50px;">
+                    <label for="file-upload">
+                        <p id="dropzone-text" data-upload-file-target="message">Drop a file here or click to upload</p>
+                    </label>
+                    <input type="file" class="filepond" name="filepond" data-upload-file-target="fileUpload" />
+                    <p id="file-info" class="file-info" style="display: none;"></p>
+                </div>
+                <p id="okmessage" data-upload-file-target="okmessage"></p>
+            </div>
+            <input type="hidden" name="prompt" data-upload-file-target="prompt" />
+        </form>
+    </div>
+</turbo-frame>
+{{ end }}

@@ -55,7 +55,6 @@ For the frontend, we use:
 - `hotwired/turbo`: A framework for building modern web applications.
 - `hotwired/stimulus`: A JavaScript framework for building web applications.
 - `shepherd`: A library for guiding users through a series of steps.
-- `codemirror`: A code editor implemented in JavaScript to display and edit prompts.
 
 ### Content-Types 
 

@@ -34,10 +34,6 @@ form#promptForm {
     margin-right: 0; /* Remove margin from the last button */
 }
 
-.CodeMirror {
-    height: 100vw;
-    border: 1px solid #333333;
-}
 
 .prompt-instruction {
     font-size: 1.25rem;
