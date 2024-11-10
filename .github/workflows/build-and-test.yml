@@ -27,7 +27,9 @@ jobs:
         run: |
           wget https://github.com/gohugoio/hugo/releases/download/v0.86.1/hugo_extended_0.86.1_Linux-64bit.deb
           sudo dpkg -i hugo_extended_0.86.1_Linux-64bit.deb
-
+      - name: hugo
+        run: cd ui && ls 
+        
       - name: Build
         run: make build
 
