@@ -15,6 +15,7 @@ copy-hugo:
 	cp -r ui/public public
 
 build-hugo:
+	rm -rf public
 	cd ui && hugo
 	
 # Build only the Go application
@@ -22,7 +23,7 @@ build-go:
 	go build -o $(BUILD_DIR)/$(BINARY_NAME) .
 
 # Build the Go application
-build: build-hugo
+build: build-hugo copy-hugo
 	go build -o $(BUILD_DIR)/$(BINARY_NAME) .
 
 genkit_mode:

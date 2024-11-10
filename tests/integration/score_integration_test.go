@@ -39,7 +39,7 @@ func TestScoreEndpoint(t *testing.T) {
 		"../prompts/invalid_prompt.json",
 	}
 
-	for _, file := range promptFiles {
+	for x, file := range promptFiles {
 		t.Run(file, func(t *testing.T) {
 			promptTest, err := loadPromptTest(file)
 			if err != nil {
@@ -55,6 +55,13 @@ func TestScoreEndpoint(t *testing.T) {
 			err = json.Unmarshal(response, &result)
 			if err != nil {
 				t.Fatalf("Failed to unmarshal response: %v", err)
+			}
+
+			// Store the response in a file for debugging purposes
+			err = ioutil.WriteFile(fmt.Sprintf("response_%d", x), response, 0644)
+
+			if err != nil {
+				t.Fatalf("Failed to write response to file: %v", err)
 			}
 
 			score := result["response"].(map[string]interface{})["score"].(float64)

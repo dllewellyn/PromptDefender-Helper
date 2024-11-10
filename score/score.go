@@ -3,6 +3,7 @@ package score
 import (
 	"PromptDefender-Keep/logger"
 	"encoding/json"
+	"math"
 	"strings"
 
 	"go.uber.org/zap"
@@ -44,6 +45,8 @@ func parseJSON(input string) (PromptScore, error) {
 	score += result.Defenses.XMLEncapsulation
 	score += result.Defenses.RandomSequenceEnclosure
 
+	// Ensure the score has only 2 decimal points at most
+	score = math.Round(score*100) / 100
 	result.Score = &score
 
 	return result, err
