@@ -11,9 +11,16 @@ all: tidy build test
 tidy:
 	go mod tidy
 
+copy-hugo:
+	cp -r ui/public public
+
 build-hugo:
-	cd ui && hugo && cp -r public ../public
+	cd ui && hugo
 	
+# Build only the Go application
+build-go:
+	go build -o $(BUILD_DIR)/$(BINARY_NAME) .
+
 # Build the Go application
 build: build-hugo
 	go build -o $(BUILD_DIR)/$(BINARY_NAME) .

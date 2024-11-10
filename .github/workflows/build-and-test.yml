@@ -25,7 +25,7 @@ jobs:
 
       - uses: klakegg/actions-hugo@1.0.0
       - name: Build
-        run: make build
+        run: make copy-hugo build-go 
 
       - name: Test
         run: make test
