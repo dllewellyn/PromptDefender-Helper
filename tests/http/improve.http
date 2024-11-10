@@ -1,5 +1,7 @@
+@base_url = http://localhost:8080
+
 ### Test JSON request
-POST http://localhost:8080/improve
+POST {{base_url}}/improve
 Content-Type: application/json
 
 {
@@ -7,13 +9,13 @@ Content-Type: application/json
 }
 
 ### Test form request
-POST http://localhost:8080/improve
+POST {{base_url}}/improve
 Content-Type: application/x-www-form-urlencoded
 
 prompt=This is a test prompt
 
 ### Test error handling with invalid JSON
-POST http://localhost:8080/improve
+POST {{base_url}}/improve
 Content-Type: application/json
 
 {
@@ -21,7 +23,7 @@ Content-Type: application/json
 }
 
 ### Test error handling with missing form data
-POST http://localhost:8080/improve
+POST {{base_url}}/improve
 Content-Type: application/x-www-form-urlencoded
 
 invalid=data
