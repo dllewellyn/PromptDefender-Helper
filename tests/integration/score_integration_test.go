@@ -1,7 +1,11 @@
+//go:build integration
+// +build integration
+
+// tests/integration/score_integration_test.go
 package integration
 
 import (
-	"context"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -13,8 +17,8 @@ import (
 )
 
 type PromptTest struct {
-	Prompt         string  `json:"prompt"`
-	ExpectedScore  float64 `json:"expected_score"`
+	Prompt           string  `json:"prompt"`
+	ExpectedScore    float64 `json:"expected_score"`
 	ExpectedDefenses struct {
 		InContextDefense        float64 `json:"in_context_defense"`
 		SystemModeSelfReminder  float64 `json:"system_mode_self_reminder"`
