@@ -24,6 +24,8 @@ jobs:
           go-version: 1.23
 
       - uses: klakegg/actions-hugo@1.0.0
+        with:
+          source: ui
       - name: Build
         run: make copy-hugo build-go 
 
