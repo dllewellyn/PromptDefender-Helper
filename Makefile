@@ -12,8 +12,8 @@ tidy:
 	go mod tidy
 
 build-hugo:
-	rm -rf public
 	cd ui && hugo && cp -r public ../public
+	
 # Build the Go application
 build: build-hugo
 	go build -o $(BUILD_DIR)/$(BINARY_NAME) .
