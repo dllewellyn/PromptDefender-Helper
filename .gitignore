@@ -13,3 +13,4 @@ service-account.json
 # Avoid pushing the env file to the repository 
 .env
 
+**/.DS_Store

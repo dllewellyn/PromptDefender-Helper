@@ -23,13 +23,12 @@ jobs:
         with:
           go-version: 1.23
 
-      - name: Install Hugo
-        run: |
-          wget https://github.com/gohugoio/hugo/releases/download/v0.86.1/hugo_extended_0.86.1_Linux-64bit.deb
-          sudo dpkg -i hugo_extended_0.86.1_Linux-64bit.deb
-
+      - uses: klakegg/actions-hugo@1.0.0
+        with:
+          source: ui
+          target: ./public
       - name: Build
-        run: make build
+        run: make build-go 
 
       - name: Test
         run: make test

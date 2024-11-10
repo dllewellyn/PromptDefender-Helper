@@ -1,0 +1,54 @@
+/* Dropzone CSS for file upload styling */
+.dropzone-custom {
+    border: 2px dashed #fefefe;
+    border-radius: 5px;
+    background: #444444; /* Changed to a lighter shade for contrast */
+    padding: 5em;
+    text-align: center;
+    cursor: pointer;
+    color: #ffffff;
+    padding-top: 10px;
+}
+
+.dropzone-custom.dragover {
+    background: #555555; /* Adjusted for better visibility */
+}
+
+.dropzone-custom .dz-message {
+    font-size: 1.2em;
+    color: #007bff;
+}
+
+.dropzone-custom .dz-preview .dz-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.dropzone-custom .dz-preview .dz-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dropzone-custom .dz-preview .dz-details {
+    display: none;
+}
+
+.dropzone-custom .dz-preview .dz-progress {
+    display: none;
+}
+
+.dropzone-custom .dz-preview .dz-error-message {
+    display: none;
+}
+
+.dropzone-custom .dz-preview .dz-success-mark,
+.dropzone-custom .dz-preview .dz-error-mark {
+    display: none;
+}
+
+.dropzone-custom .dz-preview .dz-remove {
+    display: none;
+}
