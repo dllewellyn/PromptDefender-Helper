@@ -8,6 +8,7 @@ import (
 	"PromptDefender-Keep/logger"
 	"PromptDefender-Keep/score"
 	"context"
+	"encoding/base64"
 	"fmt"
 	"os"
 
@@ -31,6 +32,13 @@ func main() {
 	r.Static("/", "./public")
 
 	r.LoadHTMLGlob("templates/*.html")
+
+	r.Use(func(c *gin.Context) {
+		for k, v := range c.Request.Header {
+			logger.Log.Info("Header", zap.String("key", k), zap.Strings("values", v))
+		}
+		c.Next()
+	})
 
 	ctx := context.Background()
 
@@ -83,6 +91,15 @@ func WriteServiceAccountKeyToFile() {
 		if serviceAccountKey == "" {
 			logger.Log.Fatal("SERVICE_ACCOUNT_KEY environment variable not set")
 		}
+
+		// Base64 decode the service account key
+		decodedServiceAccountKey, err := base64.StdEncoding.DecodeString(serviceAccountKey)
+
+		if err != nil {
+			logger.Log.Fatal("Error decoding service account key", zap.Error(err))
+		}
+
+		serviceAccountKey = string(decodedServiceAccountKey)
 
 		file, err := os.Create("service-account.json")
 		if err != nil {

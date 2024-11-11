@@ -17,6 +17,10 @@ copy-hugo:
 build-hugo:
 	rm -rf public
 	cd ui && hugo
+
+docker-deploy:
+	docker buildx build --platform linux/amd64 -t  $(DOCKER_TAG) .
+	docker push $(DOCKER_TAG)
 	
 # Build only the Go application
 build-go:

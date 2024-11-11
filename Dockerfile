@@ -23,7 +23,15 @@ COPY --from=go-builder /src/prompts /app/prompts
 WORKDIR /app
 
 # Expose the port the app runs on
+ENV PORT 8080
+
 EXPOSE 8080
 
+ENV GOOGLE_APPLICATION_CREDENTIALS="/app/service-account.json"
+
+COPY entrypoint.sh .
+
+RUN chmod +x /app/entrypoint.sh
+
 # Run the Go binary
-CMD ["sh", "-c", "cd /app && ./main"]
+ENTRYPOINT ["/app/entrypoint.sh"]
