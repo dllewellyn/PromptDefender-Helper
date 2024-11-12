@@ -138,7 +138,7 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 
 		if err != nil {
 			log.Println(err)
-			c.Redirect(http.StatusOK, "/error")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to score prompt"})
 		}
 
 		cacheResponse(response, promptCache, prompt+"_score")

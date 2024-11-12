@@ -19,7 +19,9 @@
             "mode": "auto",
             "program": "${workspaceFolder}",
             "env": {
-                
+                "PORT": "8080",
+                "GCLOUD_PROJECT": "warm-poetry-436115-k6 ",
+                "GCLOUD_LOCATION":"us-central1 "
             },
             "args": [],
             "showLog": true

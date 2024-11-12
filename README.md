@@ -127,6 +127,22 @@ First ensure you have genkit installed, you can follow the instructions here:
 make genkit_mode
 ```
 
+### Running Integration Tests for the `/score` Endpoint
+
+To run the integration tests for the `/score` endpoint, follow these steps:
+
+1. Ensure the application is running:
+    ```sh
+    make run
+    ```
+
+2. Run the integration tests:
+    ```sh
+    make integration-test
+    ```
+
+The integration tests will load prompt inputs from files in the `tests/prompts/` directory and verify that the defense matches the expected score for each prompt.
+
 ## Contributing
 
 1. Fork the repository.
