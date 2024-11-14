@@ -1,7 +1,7 @@
 # Ignore intellij idea files 
 /.idea/
 *iml
-
+github-app.com
 # Prevent from pushing the service account key to the repository
 service-account.json
 
@@ -14,3 +14,4 @@ service-account.json
 .env
 
 **/.DS_Store
+github-app.pem

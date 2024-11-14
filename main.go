@@ -4,6 +4,7 @@ import (
 	cache2 "PromptDefender-Keep/cache"
 	"PromptDefender-Keep/dependencies"
 	"PromptDefender-Keep/endpoints"
+	"PromptDefender-Keep/gh"
 	"PromptDefender-Keep/improve"
 	"PromptDefender-Keep/logger"
 	"PromptDefender-Keep/score"
@@ -18,11 +19,14 @@ import (
 	"go.uber.org/fx"
 )
 
-func main() {
+func init() {
 	// Check if the file 'service-account.json' exists on disk
 	// Retrieve the service account key from the environment variable
 	// Write the service account key to disk
 	WriteServiceAccountKeyToFile()
+}
+
+func main() {
 
 	r := gin.Default()
 
@@ -63,6 +67,7 @@ func main() {
 				cache := cache2.NewInMemoryCache()
 				endpoints.AddScorer(ctx, r, scorer, cache, loadedDefences)
 				endpoints.AddImprover(ctx, r, improver, cache)
+				setupGitHubAppBackend(r, scorer)
 
 				err := r.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
 
@@ -94,4 +99,9 @@ func WriteServiceAccountKeyToFile() {
 			logger.Log.Fatal("Error writing service account key to file", zap.Error(err))
 		}
 	}
+}
+func setupGitHubAppBackend(r *gin.Engine, scorer score.Scorer) {
+	r.POST("/github/callback", func(c *gin.Context) {
+		gh.HandleWebhook(c, scorer)
+	})
 }

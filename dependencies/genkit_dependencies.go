@@ -53,3 +53,20 @@ func ProvideReflector() *jsonschema.Reflector {
 
 	return r
 }
+
+func init() {
+	// Check if the file 'service-account.json' exists on disk
+	// Check if the environment variables are set
+	// Log and exit if the environment variables are not set
+
+	if _, err := os.Stat("service-account.json"); os.IsNotExist(err) {
+		logger.Log.Fatal("service-account.json not found")
+	}
+
+	requiredEnvVars := []string{"GCLOUD_PROJECT", "GCLOUD_LOCATION"}
+	for _, envVar := range requiredEnvVars {
+		if os.Getenv(envVar) == "" {
+			logger.Log.Fatal("Environment variable not set", zap.String("env var", envVar))
+		}
+	}
+}
