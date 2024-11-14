@@ -16,8 +16,8 @@ import (
 func ProvideScoringPrompt(model ai.Model, reflector *jsonschema.Reflector) *dotprompt.Prompt {
 	prompt, err := dotprompt.Open("scoring_prompt")
 	if err != nil {
-		logger.Log.Error("Error opening scoring prompt", zap.Error(err))
-		logger.Log.Fatal("Error opening scoring prompt", zap.Error(err))
+		logger.GetLogger().Error("Error opening scoring prompt", zap.Error(err))
+		logger.GetLogger().Fatal("Error opening scoring prompt", zap.Error(err))
 	}
 
 	scoreLlmPrompt, err := dotprompt.Define("scoreLlm.prompt", prompt.TemplateText,
@@ -28,8 +28,8 @@ func ProvideScoringPrompt(model ai.Model, reflector *jsonschema.Reflector) *dotp
 		},
 	)
 	if err != nil {
-		logger.Log.Error("Error defining scoreLlm.prompt", zap.Error(err))
-		logger.Log.Fatal("Error defining scoreLlm.prompt", zap.Error(err))
+		logger.GetLogger().Error("Error defining scoreLlm.prompt", zap.Error(err))
+		logger.GetLogger().Fatal("Error defining scoreLlm.prompt", zap.Error(err))
 	}
 	return scoreLlmPrompt
 }
@@ -54,7 +54,10 @@ func ProvideScorer(params struct {
 	})
 
 	invokeRequest := func(prompt string) (string, error) {
-		return scorePromptFlow.Run(context.Background(), prompt)
+		logger.GetLogger().Info("Invoking score prompt", zap.String("prompt", prompt))
+		response, err := scorePromptFlow.Run(context.Background(), prompt)
+		logger.GetLogger().Info("Invoked score prompt", zap.String("response", response), zap.Error(err))
+		return response, err
 	}
 
 	return score.NewLlmScorer(invokeRequest)

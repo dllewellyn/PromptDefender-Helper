@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	github.com/cucumber/godog v0.15.0
-	github.com/firebase/genkit/go v0.1.1
+	github.com/firebase/genkit/go v0.1.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/go-github/v66 v66.0.0
 	github.com/invopop/jsonschema v0.12.0

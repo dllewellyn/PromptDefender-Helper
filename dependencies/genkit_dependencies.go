@@ -22,7 +22,7 @@ func InitialiseGenkit(ctx context.Context) {
 		Location:      os.Getenv("GCLOUD_LOCATION"),
 		ClientOptions: []option.ClientOption{option.WithCredentialsFile("service-account.json")},
 	}); err != nil {
-		logger.Log.Fatal("Error initializing Vertex AI", zap.Error(err))
+		logger.GetLogger().Fatal("Error initializing Vertex AI", zap.Error(err))
 	}
 
 	dotprompt.SetDirectory("prompts")
@@ -31,7 +31,7 @@ func InitialiseGenkit(ctx context.Context) {
 		ctx,
 		googlecloud.Config{ProjectID: os.Getenv("GCLOUD_PROJECT")},
 	); err != nil {
-		logger.Log.Fatal("Error initializing Google Cloud", zap.Error(err))
+		logger.GetLogger().Fatal("Error initializing Google Cloud", zap.Error(err))
 	}
 
 }
@@ -39,7 +39,7 @@ func InitialiseGenkit(ctx context.Context) {
 func ProvideModel() ai.Model {
 	g := vertexai.Model("gemini-1.5-pro")
 	if g == nil {
-		logger.Log.Fatal("Model is nil")
+		logger.GetLogger().Fatal("Model is nil")
 	}
 
 	return g
@@ -60,13 +60,13 @@ func init() {
 	// Log and exit if the environment variables are not set
 
 	if _, err := os.Stat("service-account.json"); os.IsNotExist(err) {
-		logger.Log.Fatal("service-account.json not found")
+		logger.GetLogger().Fatal("service-account.json not found")
 	}
 
 	requiredEnvVars := []string{"GCLOUD_PROJECT", "GCLOUD_LOCATION"}
 	for _, envVar := range requiredEnvVars {
 		if os.Getenv(envVar) == "" {
-			logger.Log.Fatal("Environment variable not set", zap.String("env var", envVar))
+			logger.GetLogger().Fatal("Environment variable not set", zap.String("env var", envVar))
 		}
 	}
 }

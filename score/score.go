@@ -33,7 +33,7 @@ func parseJSON(input string) (PromptScore, error) {
 	var result PromptScore
 	err := json.Unmarshal([]byte(cleaned), &result)
 	if err != nil {
-		logger.Log.Error("Error unmarshalling JSON", zap.Error(err))
+		logger.GetLogger().Error("Error unmarshalling JSON", zap.Error(err))
 		return result, err
 	}
 

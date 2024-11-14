@@ -11,25 +11,35 @@ import (
 	"strconv"
 
 	ghinstallation "github.com/bradleyfalzon/ghinstallation/v2"
+	"go.uber.org/zap"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/go-github/v66/github"
 )
 
 func HandleWebhook(c *gin.Context, scorer score.Scorer) {
+	logger.GetLogger().Info("Received webhook", zap.Any("request", c.Request.Header), zap.Any("body", c.Request.Body))
+
 	payload, err := github.ValidatePayload(c.Request, []byte(os.Getenv("GITHUB_WEBHOOK_SECRET")))
 	if err != nil {
+		logger.GetLogger().Error("Could not validate payload", zap.Error(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payload"})
 		return
 	}
 
+	if c.GetHeader("X-GitHub-Event") != "pull_request" {
+		logger.GetLogger().Error("Invalid event type", zap.String("event", c.GetHeader("X-GitHub-Event")))
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid event type"})
+	}
+
 	event := github.PullRequestEvent{}
 	if err := json.Unmarshal(payload, &event); err != nil {
+		logger.GetLogger().Error("Could not parse webhook", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not parse webhook"})
 		return
 	}
 
-	if event.GetAction() == "opened" || event.GetAction() == "synchronize" {
+	if event.GetAction() == "opened" || event.GetAction() == "synchronize" || event.GetAction() == "reopened" {
 		go handlePullRequest(event, scorer)
 	}
 
@@ -42,6 +52,7 @@ func handlePullRequest(event github.PullRequestEvent, scorer score.Scorer) ([]sc
 	owner := event.Repo.Owner.GetLogin()
 	repo := event.Repo.GetName()
 	prNumber := event.GetNumber()
+	branchName := event.PullRequest.Head.GetRef()
 
 	// Get the latest version of the .github/prompt-defender.yml file from the branch
 	branch := event.PullRequest.Head.GetRef()
@@ -84,8 +95,11 @@ func handlePullRequest(event github.PullRequestEvent, scorer score.Scorer) ([]sc
 
 	fileHandler := NewFileHandler(scorer, client)
 
+	logger.GetLogger().Info("Checking if should run", zap.Any("config", config), zap.Any("owner", owner), zap.Any("repo", repo), zap.Any("prNumber", prNumber))
+
 	if shouldRun, err := fileHandler.ShouldRun(ctx, owner, repo, prNumber, config.Prompts); err == nil && shouldRun {
-		response, err := fileHandler.RunFilesThroughScoreEndpoint(ctx, owner, repo, prNumber)
+
+		response, err := fileHandler.RunFilesThroughScoreEndpoint(ctx, owner, repo, branchName, prNumber, config.Prompts)
 
 		if err != nil {
 			fmt.Printf("Error running files through score endpoint: %v\n", err)
@@ -102,7 +116,7 @@ func init() {
 	requiredEnvVars := []string{"GITHUB_WEBHOOK_SECRET", "GITHUB_APPLICATION_ID"}
 	for _, envVar := range requiredEnvVars {
 		if os.Getenv(envVar) == "" {
-			logger.Log.Fatal(fmt.Sprintf("%s environment variable not set", envVar))
+			logger.GetLogger().Fatal(fmt.Sprintf("%s environment variable not set", envVar))
 		}
 	}
 }

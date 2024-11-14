@@ -7,9 +7,7 @@ import (
 )
 
 type Config struct {
-	Prompts   []string `yaml:"prompts"`
-	ShouldRun bool     `yaml:"should_run"`
-	FilePaths []string `yaml:"file_paths"`
+	Prompts []string `yaml:"prompts"`
 }
 
 func LoadConfigFromString(content string) (*Config, error) {
