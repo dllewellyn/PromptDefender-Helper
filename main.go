@@ -33,13 +33,6 @@ func main() {
 
 	r.LoadHTMLGlob("templates/*.html")
 
-	r.Use(func(c *gin.Context) {
-		for k, v := range c.Request.Header {
-			logger.Log.Info("Header", zap.String("key", k), zap.Strings("values", v))
-		}
-		c.Next()
-	})
-
 	ctx := context.Background()
 
 	logger.Log.Debug("Initialising genkit")
