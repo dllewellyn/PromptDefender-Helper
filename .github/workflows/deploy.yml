@@ -13,8 +13,13 @@ jobs:
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_STORAGE_ACCOUNT_NAME: ${{ secrets.ARM_STORAGE_ACCOUNT_NAME }}
-      TF_VAR_resourceGroupName: "pd-resource-group-01"
-      TF_VAR_containerRegistryName: "promptdefender01"
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP_NAME }}
+      TF_VAR_gcloudProject: ${{ secrets.GCLOUD_PROJECT_ID }}
+      TF_VAR_gcloudLocation: ${{ secrets.GCLOUD_LOCATION }}
+      TF_VAR_serviceAccountKey: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+      TF_VAR_clientId: ${{ secrets.GITHUB_CLIENT_ID }}
+      TF_VAR_clientSecret: ${{ secrets.GITHUB_CLIENT_SECRET }}
+      CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
 
     steps:
       - name: Checkout repository
@@ -35,8 +40,4 @@ jobs:
       - name: Run deploy script
         run: |
           chmod +x deploy.sh
-          ./deploy.sh ${{ secrets.CONTAINER_NAME }}
-        env:
-          ARM_STORAGE_ACCOUNT_NAME: ${{ secrets.ARM_STORAGE_ACCOUNT_NAME }}
-          TF_VAR_resourceGroupName: ${{ env.TF_VAR_resourceGroupName }}
-          TF_VAR_containerRegistryName: ${{ env.TF_VAR_containerRegistryName }}
+          ./deploy.sh ${{ env.CONTAINER_NAME }} ${{ env.RESOURCE_GROUP }}

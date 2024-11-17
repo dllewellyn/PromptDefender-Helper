@@ -1,14 +1,15 @@
 #!/bin/bash
 
 # Variables
-RESOURCE_GROUP="pd-resource-group-01"
+
 ACR_NAME="promptdefender01"
 IMAGE_NAME="prompt-defender"
 CONTAINER_NAME=$1
+RESOURCE_GROUP=$2
 
 # Check if container name is provided
-if [ -z "$CONTAINER_NAME" ]; then
-	echo "Usage: $0 <container-name>"
+if [ -z "$CONTAINER_NAME" ] || [ -z "$RESOURCE_GROUP" ]; then
+	echo "Usage: $0 <container-name> <resource-group>"
 	exit 1
 fi
 
