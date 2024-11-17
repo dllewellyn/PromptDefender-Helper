@@ -36,5 +36,21 @@ variable clientId {
 
 variable clientSecret {
   type        = string
-  description = "description"
+  description = "Github app client secret"
+}
+
+// GCcloud config for vertex
+variable gcloudLocation {
+  type        = string
+  description = "GCLOUD location"
+}
+
+variable gcloudProject {
+  type        = string
+  description = "GCLOUD project"
+}
+
+variable serviceAccountKey {
+  type        = string
+  description = "Service account key"
 }

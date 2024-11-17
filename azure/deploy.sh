@@ -15,24 +15,21 @@ fi
 # Login to Azure
 echo "Logging in to Azure..."
 
-# Set the subscription (optional)
-az account set --subscription $SUBSCRIPTION_ID
-
 # Deploy Terraform
 echo "Deploying Terraform..."
 terraform init
-terraform apply -auto-approve -var "resourceGroupName=$RESOURCE_GROUP" -var "containerRegistryName=$ACR_NAME" -var "subscriptionId=$SUBSCRIPTION_ID"
+terraform apply -auto-approve -var "resourceGroupName=$RESOURCE_GROUP" -var "containerRegistryName=$ACR_NAME" || exit 1
 
 # Login to Azure Container Registry
 echo "Logging in to Azure Container Registry..."
 az acr login --name $ACR_NAME
 
 # Tag the Docker image
-echo "Tagging the Docker image..."
-docker tag $IMAGE_NAME $ACR_NAME.azurecr.io/$CONTAINER_NAME
+echo "Tagging the Docker image... as $ACR_NAME.azurecr.io/$IMAGE_NAME:latest"
+docker tag $CONTAINER_NAME $ACR_NAME.azurecr.io/$IMAGE_NAME:latest || exit 1
 
 # Push the Docker image to the Azure Container Registry
-echo "Pushing the Docker image to the Azure Container Registry..."
-docker push $ACR_NAME.azurecr.io/$CONTAINER_NAME
+echo "Pushing the Docker image to the Azure Container Registry... "
+docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:latest || exit 1
 
 echo "Deployment completed successfully."
