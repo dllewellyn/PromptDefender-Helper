@@ -14,3 +14,4 @@ service-account.json
 .env
 
 **/.DS_Store
+/azure/backend.tfvars

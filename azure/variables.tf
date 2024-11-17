@@ -1,3 +1,4 @@
+// Variable for state 
 variable containerName {
   type        = string
   default     = "prompt-defender"

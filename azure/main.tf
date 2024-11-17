@@ -1,3 +1,10 @@
+terraform {
+  backend "azurerm" {
+    container_name        = "tfstate"
+    key             = "terraform.tfstate"
+  }
+}
+
 provider "azurerm" {
   features {}
   subscription_id = var.subscriptionId

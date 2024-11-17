@@ -17,7 +17,7 @@ echo "Logging in to Azure..."
 
 # Deploy Terraform
 echo "Deploying Terraform..."
-terraform init
+terraform init -backend-config="storage_account_name=$ARM_STORAGE_ACCOUNT_NAME"
 terraform apply -auto-approve -var "resourceGroupName=$RESOURCE_GROUP" -var "containerRegistryName=$ACR_NAME" || exit 1
 
 # Login to Azure Container Registry
