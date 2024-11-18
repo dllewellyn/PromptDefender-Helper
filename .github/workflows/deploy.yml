@@ -24,6 +24,7 @@ jobs:
       TF_VAR_serviceAccountKey: ${{ secrets.SERVICE_ACCOUNT_KEY }}
       TF_VAR_clientId: ${{ secrets.GH_CLIENT_ID }}
       TF_VAR_clientSecret: ${{ secrets.GH_CLIENT_SECRET }}
+      TF_VAR_subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       CONTAINER_NAME: "prompt-defender"
 
     steps:
@@ -34,7 +35,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.0.0
-          
+
       - name: Build Docker image
         run: docker buildx build --platform linux/amd64 -t ${{ env.CONTAINER_NAME }} . 
 

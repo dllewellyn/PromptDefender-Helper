@@ -64,9 +64,11 @@
    - Implement retry mechanisms for transient errors.
 
 3. **Maintainability**
-   - Follow clear coding conventions (e.g., `golint` or `gofmt`).
-   - Maintain comprehensive documentation in Markdown format.
-   - Ensure each module has clear ownership and responsibility.
+   - Follow clear coding conventions (e.g., `golint` or `gofmt`). You can use `make format` to run these.
+   - Maintain documentation in Markdown format in the `/docs` folder
+   - Ensure each module has clear ownership and responsibility and follows the best practices for go packages
+      of one function per package
+   - Use clean code standards 
 
 4. **Observability**
    - Implement structured logging and monitoring for key application metrics.
