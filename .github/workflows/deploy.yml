@@ -14,7 +14,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: Production
     env:
       ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
       ARM_STORAGE_ACCOUNT_NAME: ${{ secrets.ARM_STORAGE_ACCOUNT_NAME }}
