@@ -10,38 +10,37 @@ provider "azurerm" {
   subscription_id = var.subscriptionId
 }
 
-resource "azurerm_resource_group" "resource_group" {
+data "azurerm_resource_group" "resource_group" {
   name     = var.resourceGroupName
-  location = var.location
 }
 
 resource "azurerm_container_registry" "container_registry" {
   name                = var.containerRegistryName
-  resource_group_name = azurerm_resource_group.resource_group.name
-  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = data.azurerm_resource_group.resource_group.name
+  location            = data.azurerm_resource_group.resource_group.location
   sku                 = "Basic"
   admin_enabled       = true
 }
 
 resource "azurerm_service_plan" "app_service_plan" {
   name                = "pdappserviceplan"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = data.azurerm_resource_group.resource_group.location
+  resource_group_name = data.azurerm_resource_group.resource_group.name
   os_type             = "Linux"
   sku_name            = "B1"
 }
 
 resource "azurerm_application_insights" "app_insights" {
   name                = "pdappinsights"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = data.azurerm_resource_group.resource_group.location
+  resource_group_name = data.azurerm_resource_group.resource_group.name
   application_type    = "web"
 }
 
 resource "azurerm_linux_web_app" "app_service" {
   name                = "pdappservice"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = data.azurerm_resource_group.resource_group.location
+  resource_group_name = data.azurerm_resource_group.resource_group.name
   service_plan_id     = azurerm_service_plan.app_service_plan.id
 
 
@@ -58,7 +57,9 @@ resource "azurerm_linux_web_app" "app_service" {
     auth_enabled     = true
 
     default_provider = "github"
-require_authentication = false
+    require_authentication = false
+    unauthenticated_action = "AllowAnonymous"
+
     github_v2 {
       client_id                  = var.clientId
       client_secret_setting_name = "GITHUB_CLIENT_SECRET"
@@ -107,7 +108,7 @@ resource "null_resource" "configure_app_service" {
   provisioner "local-exec" {
     command = <<EOT
     az webapp config appsettings set --name pdappservice \
-      --resource-group ${azurerm_resource_group.resource_group.name} \
+      --resource-group ${data.azurerm_resource_group.resource_group.name} \
       --settings GITHUB_CLIENT_SECRET="@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.github_client_secret.id})" \
                 GCLOUD_LOCATION="@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.gcloud_location.id})" \
                 GCLOUD_PROJECT="@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.gcloud_project.id})" \
@@ -116,12 +117,21 @@ resource "null_resource" "configure_app_service" {
   }
 }
 
-resource "azurerm_key_vault" "prompt_defender_kv" {
+resource "azurerm_key_vault" "prompt_defender_kv" { #tfsec:ignore:azure-keyvault-no-purge
   name                = "promptdefender-keyvault"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = data.azurerm_resource_group.resource_group.location
+  resource_group_name = data.azurerm_resource_group.resource_group.name
   tenant_id           = azurerm_linux_web_app.app_service.identity[0].tenant_id
   sku_name            = "standard"
+
+  network_acls {
+    default_action = "Deny"
+    bypass         = "AzureServices"
+
+    ip_rules = [
+      "0.0.0.0/0"
+    ]
+  }
 
   access_policy {
     tenant_id = azurerm_linux_web_app.app_service.identity[0].tenant_id
