@@ -36,7 +36,7 @@ jobs:
           terraform_version: 1.0.0
           
       - name: Build Docker image
-        run: docker build -t . ${{ env.CONTAINER_NAME }}
+        run: docker buildx build --platform linux/amd64 -t ${{ env.CONTAINER_NAME }} . 
 
       - name: Azure login
         uses: azure/login@v2
