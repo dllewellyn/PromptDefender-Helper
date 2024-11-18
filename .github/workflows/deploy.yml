@@ -49,7 +49,8 @@ jobs:
         uses: Azure/cli@v2.1.0
         with:
           inlineScript: |
-            chmod +x deploy.sh
+            cd azure && 
+            chmod +x deploy.sh && 
             ./deploy.sh ${{ env.CONTAINER_NAME }} ${{ env.RESOURCE_GROUP }}
               
   
