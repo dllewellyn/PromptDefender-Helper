@@ -13,14 +13,12 @@ import (
 	"github.com/firebase/genkit/go/plugins/googlecloud"
 	"github.com/firebase/genkit/go/plugins/vertexai"
 	"github.com/invopop/jsonschema"
-	"google.golang.org/api/option"
 )
 
 func InitialiseGenkit(ctx context.Context) {
 	if err := vertexai.Init(ctx, &vertexai.Config{
-		ProjectID:     os.Getenv("GCLOUD_PROJECT"),
-		Location:      os.Getenv("GCLOUD_LOCATION"),
-		ClientOptions: []option.ClientOption{option.WithCredentialsFile("service-account.json")},
+		ProjectID: os.Getenv("GCLOUD_PROJECT"),
+		Location:  os.Getenv("GCLOUD_LOCATION"),
 	}); err != nil {
 		logger.Log.Fatal("Error initializing Vertex AI", zap.Error(err))
 	}

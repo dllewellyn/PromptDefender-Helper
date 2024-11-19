@@ -3,13 +3,14 @@ package endpoints
 import (
 	"PromptDefender-Keep/cache"
 	"PromptDefender-Keep/dependencies"
+	"PromptDefender-Keep/logger"
 	"PromptDefender-Keep/score"
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type DefenceLevel = int
@@ -96,6 +97,7 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 		}
 		if c.Request.Header.Get("Content-Type") == "application/json" {
 			if err := c.ShouldBindJSON(&requestBody); err != nil {
+				logger.Log.Error("Invalid JSON payload", zap.Error(err))
 				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON payload"})
 				return
 			}
@@ -107,18 +109,19 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 		cachedResponse, err := promptCache.Get(ctx, prompt+"_score")
 
 		if err != nil {
-			log.Println(err)
-			c.Redirect(http.StatusOK, "/error")
+			logger.Log.Error("Error getting cached response", zap.Error(err))
+			c.Redirect(http.StatusPermanentRedirect, "/error")
 			return
 		}
 
 		if cachedResponse != "" {
 			// Convert cachedResponse to PromptScore
+			logger.Log.Debug("Using cached response")
 			var response score.PromptScore
 			err = json.Unmarshal([]byte(cachedResponse), &response)
 			if err != nil {
-				log.Println(err)
-				c.Redirect(http.StatusOK, "/error")
+				logger.Log.Error("Error unmarshalling cache response", zap.Error(err))
+				c.Redirect(http.StatusPermanentRedirect, "/error")
 				return
 			}
 
@@ -134,11 +137,16 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 			return
 		}
 
+		logger.Log.Debug("Scoring prompt", zap.String("prompt", prompt))
+
 		response, err := scorer.Score(prompt)
 
+		logger.Log.Debug("Prompt scored", zap.Any("response", response))
+
 		if err != nil {
-			log.Println(err)
+			logger.Log.Error("Error getting", zap.Error(err))
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to score prompt"})
+			return
 		}
 
 		cacheResponse(response, promptCache, prompt+"_score")
@@ -158,7 +166,7 @@ func cacheResponse(response *score.PromptScore, promptCache cache.Cache, prompt 
 	responseJson, err := json.Marshal(response)
 
 	if err != nil {
-		log.Println(err)
+		logger.Log.Error("Error marshalling for cache", zap.Error(err))
 	}
 
 	err = promptCache.Set(context.Background(), prompt, string(responseJson))
@@ -166,6 +174,6 @@ func cacheResponse(response *score.PromptScore, promptCache cache.Cache, prompt 
 	if err != nil {
 		// Log the error but ignore - we don't want to fail the request
 		// if the cache fails
-		log.Println(err)
+		logger.Log.Error("Error caching response", zap.Error(err))
 	}
 }

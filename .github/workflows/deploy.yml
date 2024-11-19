@@ -1,0 +1,58 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - feature/adding_azure_deployment 
+      
+permissions:
+  id-token: write
+  contents: read
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+    env:
+      ARM_ACCESS_KEY: ${{ secrets.ARM_ACCESS_KEY }}
+      ARM_STORAGE_ACCOUNT_NAME: ${{ secrets.ARM_STORAGE_ACCOUNT_NAME }}
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP_NAME }}
+      TF_VAR_gcloudProject: ${{ secrets.GCLOUD_PROJECT_ID }}
+      TF_VAR_gcloudLocation: ${{ secrets.GCLOUD_LOCATION }}
+      TF_VAR_serviceAccountKey: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+      TF_VAR_clientId: ${{ secrets.GH_CLIENT_ID }}
+      TF_VAR_clientSecret: ${{ secrets.GH_CLIENT_SECRET }}
+      TF_VAR_subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      CONTAINER_NAME: "prompt-defender"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Build Docker image
+        run: docker buildx build --platform linux/amd64 -t ${{ env.CONTAINER_NAME }} . 
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
+      - name: Install azure-cli
+        uses: pietrobolcato/install-azure-cli-action@v1.0.1
+          
+      - name: Azure CLI Action
+        run: |
+            cd azure && 
+            chmod +x deploy.sh && 
+            ./deploy.sh ${{ env.CONTAINER_NAME }} ${{ env.RESOURCE_GROUP }}
+              
+  
