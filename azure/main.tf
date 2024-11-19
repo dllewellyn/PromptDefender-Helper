@@ -66,7 +66,7 @@ resource "azurerm_linux_web_app" "app_service" {
     }
 
     login {
-
+      token_store_enabled = true
     }
   }
 
