@@ -4,7 +4,7 @@ resource "random_string" "suffix" {
 }
 
 resource "azurerm_key_vault" "prompt_defender_kv" { #tfsec:ignore:azure-keyvault-no-purge
-  name                = "promptdefender-keyvault-${random_string.suffix.result}"
+  name                = "promptdefender${random_string.suffix.result}"
   location            = data.azurerm_resource_group.resource_group.location
   resource_group_name = data.azurerm_resource_group.resource_group.name
   tenant_id           = azurerm_linux_web_app.app_service.identity[0].tenant_id
