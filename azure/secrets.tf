@@ -1,3 +1,8 @@
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+}
+
 resource "azurerm_key_vault" "prompt_defender_kv" { #tfsec:ignore:azure-keyvault-no-purge
   name                = "promptdefender-keyvault-${random_string.suffix.result}"
   location            = data.azurerm_resource_group.resource_group.location
