@@ -14,4 +14,6 @@ service-account.json
 .env
 
 **/.DS_Store
+/azure/backend.tfvars
+/azure/.terraform/
 github-app.pem

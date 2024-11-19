@@ -7,7 +7,6 @@ import (
 	"PromptDefender-Keep/score"
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -118,6 +117,7 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 
 		if cachedResponse != "" {
 			// Convert cachedResponse to PromptScore
+			logger.Log.Debug("Using cached response")
 			var response score.PromptScore
 			err = json.Unmarshal([]byte(cachedResponse), &response)
 			if err != nil {
@@ -138,7 +138,11 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 			return
 		}
 
+		logger.Log.Debug("Scoring prompt", zap.String("prompt", prompt))
+
 		response, err := scorer.Score(prompt)
+
+		logger.Log.Debug("Prompt scored", zap.Any("response", response))
 
 		if err != nil {
 			logger.GetLogger().Error("Failed to score prompt", zap.Error(err))
@@ -163,7 +167,7 @@ func cacheResponse(response *score.PromptScore, promptCache cache.Cache, prompt 
 	responseJson, err := json.Marshal(response)
 
 	if err != nil {
-		log.Println(err)
+		logger.Log.Error("Error marshalling for cache", zap.Error(err))
 	}
 
 	err = promptCache.Set(context.Background(), prompt, string(responseJson))
@@ -171,6 +175,6 @@ func cacheResponse(response *score.PromptScore, promptCache cache.Cache, prompt 
 	if err != nil {
 		// Log the error but ignore - we don't want to fail the request
 		// if the cache fails
-		log.Println(err)
+		logger.Log.Error("Error caching response", zap.Error(err))
 	}
 }

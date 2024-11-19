@@ -17,6 +17,11 @@ copy-hugo:
 build-hugo:
 	rm -rf public
 	cd ui && hugo
+
+deploy:
+	docker buildx build --platform linux/amd64 -t  $(DOCKER_TAG) .
+	./deploy.sh $(DOCKER_TAG)
+	
 	
 # Build only the Go application
 build-go:
@@ -44,6 +49,7 @@ run: build
 # Format the code
 fmt:
 	go fmt ./...
+	cd azure && terraform fmt -recursive
 
 # Lint the code
 lint:
