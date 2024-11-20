@@ -17,7 +17,7 @@ func ProvideImprovePrompt(model ai.Model, reflector *jsonschema.Reflector) *dotp
 	prompt, err := dotprompt.Open("suggest_improvements")
 
 	if err != nil {
-		logger.Log.Error("Error opening suggest_improvements prompt", zap.Error(err))
+		logger.GetLogger().Error("Error opening suggest_improvements prompt", zap.Error(err))
 		return nil
 	}
 
@@ -30,7 +30,7 @@ func ProvideImprovePrompt(model ai.Model, reflector *jsonschema.Reflector) *dotp
 	)
 
 	if err != nil {
-		logger.Log.Error("Error defining suggest_improvements.prompt", zap.Error(err))
+		logger.GetLogger().Error("Error defining suggest_improvements.prompt", zap.Error(err))
 		return nil
 	}
 	return scoreLlmPrompt

@@ -32,8 +32,7 @@ build: build-hugo copy-hugo
 	go build -o $(BUILD_DIR)/$(BINARY_NAME) .
 
 genkit_mode:
-	export TEST_MODE=true
-	genkit start
+	PORT=4000 TEST_MODE=true genkit start
 
 # Run tests
 test:

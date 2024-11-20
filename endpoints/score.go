@@ -97,7 +97,8 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 		}
 		if c.Request.Header.Get("Content-Type") == "application/json" {
 			if err := c.ShouldBindJSON(&requestBody); err != nil {
-				logger.Log.Error("Invalid JSON payload", zap.Error(err))
+
+				logger.GetLogger().Error("Invalid JSON payload", zap.Error(err))
 				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON payload"})
 				return
 			}
@@ -109,8 +110,8 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 		cachedResponse, err := promptCache.Get(ctx, prompt+"_score")
 
 		if err != nil {
-			logger.Log.Error("Error getting cached response", zap.Error(err))
-			c.Redirect(http.StatusPermanentRedirect, "/error")
+			logger.GetLogger().Error("Failed to get cached response", zap.Error(err))
+			c.Redirect(http.StatusOK, "/error")
 			return
 		}
 
@@ -120,8 +121,8 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 			var response score.PromptScore
 			err = json.Unmarshal([]byte(cachedResponse), &response)
 			if err != nil {
-				logger.Log.Error("Error unmarshalling cache response", zap.Error(err))
-				c.Redirect(http.StatusPermanentRedirect, "/error")
+				logger.GetLogger().Error("Failed to unmarshal cached response", zap.Error(err))
+				c.Redirect(http.StatusOK, "/error")
 				return
 			}
 
@@ -144,7 +145,7 @@ func AddScorer(ctx context.Context, engine *gin.Engine, scorer score.Scorer, pro
 		logger.Log.Debug("Prompt scored", zap.Any("response", response))
 
 		if err != nil {
-			logger.Log.Error("Error getting", zap.Error(err))
+			logger.GetLogger().Error("Failed to score prompt", zap.Error(err))
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to score prompt"})
 			return
 		}

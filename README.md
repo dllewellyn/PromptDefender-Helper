@@ -161,4 +161,48 @@ The integration tests will load prompt inputs from files in the `tests/prompts/`
     ```
 6. Create a new Pull Request.
 
+## GitHub App Integration
 
+### Configuring the GitHub App for Scoring Prompts
+
+To configure the GitHub App for scoring prompts, follow these steps:
+
+1. **Create the GitHub App**:
+    - Go to GitHub Developer Settings.
+    - Select "New GitHub App".
+    - Fill out the basic information, such as the app name, description, and callback URL (use any URL for now; it can be a placeholder if you're just testing locally).
+    - Set Permissions:
+        - Repository permissions: Set Contents to Read-only.
+        - Pull Requests: Set Read & Write (for adding status checks or comments).
+    - Set Subscribe to events: Select Pull request.
+    - Register the GitHub App.
+    - Once registered, you'll get a Client ID and Client Secret. You'll also need to generate a Private Key for authenticating requests from the app.
+
+2. **Build the GitHub App Backend**:
+    - Implement a server to receive GitHub webhook events and process them.
+    - The server should:
+        - Receive Webhook Events: Listen for pull request events.
+        - Check for Specific Files: When a pull request is opened or updated, check if specific files are present.
+        - Score the Prompt: Use the `score` package to score the prompt.
+        - Update PR Status: Post a status check on the pull request based on the result.
+
+3. **Deploy the App**:
+    - Run Locally: Start by running the app locally and using a tool like ngrok to forward GitHub’s webhook events to your local server.
+    - Set Environment Variables:
+        - `GITHUB_WEBHOOK_SECRET`: Your GitHub App webhook secret.
+        - `GITHUB_APP_TOKEN`: An installation access token for the GitHub App.
+    - Deployment Options: For production, deploy to a cloud provider like AWS, Heroku, or DigitalOcean. Ensure the server is accessible by GitHub for receiving webhook events.
+
+4. **Install the App on Repositories**:
+    - Once your app is deployed, install it on the repository you want to monitor.
+    - When a pull request is created or updated, the app will receive the webhook, check for the specified files, score the prompt, and post a status check result.
+
+### Using the GitHub App
+
+The GitHub App allows you to score prompts and update pull requests with the score. It provides a level of assurance that the updated prompt is still secure whenever you update your prompts.
+
+To use the GitHub App:
+
+1. Install the GitHub App on your repository.
+2. Create or update a pull request with the prompt you want to score.
+3. The GitHub App will receive the webhook event, score the prompt, and update the pull request with the score and pass/fail status.
