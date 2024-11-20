@@ -18,8 +18,6 @@ import (
 )
 
 func HandleWebhook(c *gin.Context, scorer score.Scorer) {
-	logger.GetLogger().Info("Received webhook", zap.Any("request", c.Request.Header), zap.Any("body", c.Request.Body))
-
 	payload, err := github.ValidatePayload(c.Request, []byte(os.Getenv("GITHUB_WEBHOOK_SECRET")))
 	if err != nil {
 		logger.GetLogger().Error("Could not validate payload", zap.Error(err))
@@ -55,41 +53,16 @@ func handlePullRequest(event github.PullRequestEvent, scorer score.Scorer) ([]sc
 	branchName := event.PullRequest.Head.GetRef()
 
 	// Get the latest version of the .github/prompt-defender.yml file from the branch
-	branch := event.PullRequest.Head.GetRef()
 
-	installationID := event.Installation.GetID()
-	githubAppId := os.Getenv(("GITHUB_APPLICATION_ID"))
+	client, err := buildGithubClient(event)
 
-	githubAppIdInt, err := strconv.Atoi(githubAppId)
 	if err != nil {
-		fmt.Printf("Error converting GITHUB_APPLICATION_ID to int: %v\n", err)
 		return nil, err
 	}
 
-	itr, err := ghinstallation.NewKeyFromFile(http.DefaultTransport, int64(githubAppIdInt), installationID, "github-app.pem")
+	config, err := retrieveConfigurationFromBranch(client, ctx, event, owner, repo)
 
 	if err != nil {
-		fmt.Printf("Error creating github client: %v\n", err)
-	}
-
-	client := github.NewClient(&http.Client{Transport: itr})
-
-	fileContent, _, _, err := client.Repositories.GetContents(ctx, owner, repo, ".github/prompt-defender.yml", &github.RepositoryContentGetOptions{Ref: branch})
-	if err != nil {
-		fmt.Printf("Error getting file content from GitHub: %v\n", err)
-		return nil, err
-	}
-
-	content, err := fileContent.GetContent()
-	if err != nil {
-		fmt.Printf("Error decoding file content: %v\n", err)
-		return nil, err
-	}
-
-	config, err := LoadConfigFromString(content)
-
-	if err != nil {
-		fmt.Printf("Error loading config from string: %v\n", err)
 		return nil, err
 	}
 
@@ -110,6 +83,52 @@ func handlePullRequest(event github.PullRequestEvent, scorer score.Scorer) ([]sc
 
 	return make([]score.PromptScore, 0), nil
 
+}
+
+func retrieveConfigurationFromBranch(client *github.Client, ctx context.Context, event github.PullRequestEvent, owner string, repo string) (*Config, error) {
+
+	branch := event.PullRequest.Head.GetRef()
+
+	fileContent, _, _, err := client.Repositories.GetContents(ctx, owner, repo, ".github/prompt-defender.yml", &github.RepositoryContentGetOptions{Ref: branch})
+	if err != nil {
+		fmt.Printf("Error getting file content from GitHub: %v\n", err)
+		return nil, err
+	}
+
+	content, err := fileContent.GetContent()
+	if err != nil {
+		fmt.Printf("Error decoding file content: %v\n", err)
+		return nil, err
+	}
+
+	config, err := LoadConfigFromString(content)
+
+	if err != nil {
+		fmt.Printf("Error loading config from string: %v\n", err)
+		return nil, err
+	}
+
+	return config, nil
+}
+
+func buildGithubClient(event github.PullRequestEvent) (*github.Client, error) {
+
+	installationID := event.Installation.GetID()
+	githubAppId := os.Getenv(("GITHUB_APPLICATION_ID"))
+
+	githubAppIdInt, err := strconv.Atoi(githubAppId)
+	if err != nil {
+		fmt.Printf("Error converting GITHUB_APPLICATION_ID to int: %v\n", err)
+		return nil, err
+	}
+
+	itr, err := ghinstallation.NewKeyFromFile(http.DefaultTransport, int64(githubAppIdInt), installationID, "github-app.pem")
+
+	if err != nil {
+		fmt.Printf("Error creating github client: %v\n", err)
+	}
+
+	return github.NewClient(&http.Client{Transport: itr}), nil
 }
 
 func init() {
